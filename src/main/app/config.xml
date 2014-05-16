@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:context="http://www.springframework.org/schema/context"
+xmlns:siebel="http://www.mulesoft.org/schema/mule/siebel" 
+xmlns="http://www.mulesoft.org/schema/mule/core" 
+xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+xmlns:smtp="http://www.mulesoft.org/schema/mule/smtp" 
+xmlns:spring="http://www.springframework.org/schema/beans" 
+xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc"
+version="EE-3.5.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/smtp http://www.mulesoft.org/schema/mule/smtp/current/mule-smtp.xsd
+http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/siebel/2.0/mule-siebel.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd"
+>
+	
+	<!-- This is the main configuration files, you should place here all the Connectors configuration an declarations -->
+
+    <context:property-placeholder location="common.properties, mule.${mule.env}.properties"/>
+    
+    <smtp:gmail-connector name="gmailConnector" doc:name="Gmail" validateConnections="true" doc:description="This is the connector used to send email notifications. You should change its configuration to select a different email provider"/>
+
+    <siebel:config name="Oracle_Siebel_Business_Objects" user="${sieb.user}" password="${sieb.password}" server="${sieb.server}" serverName="${sieb.serverName}" objectManager="${sieb.objectManager}" doc:name="Oracle Siebel Business Objects" doc:description="Destination Oracle Siebel Business Objects instance. This is the destination organization, where accounts will be migrated to." port="${sieb.port}">
+        <siebel:connection-pooling-profile initialisationPolicy="INITIALISE_ONE" exhaustedAction="WHEN_EXHAUSTED_GROW"/>
+    </siebel:config>
+    
+    <sfdc:config name="Salesforce" username="${sfdc.username}" password="${sfdc.password}" securityToken="${sfdc.securityToken}" url="${sfdc.url}" doc:name="Salesforce A" doc:description="Your SalesForce instance. This is the source organization, where accounts will be migrated from.">
+        <sfdc:connection-pooling-profile initialisationPolicy="INITIALISE_ONE" exhaustedAction="WHEN_EXHAUSTED_GROW"/>
+    </sfdc:config>
+    
+</mule>

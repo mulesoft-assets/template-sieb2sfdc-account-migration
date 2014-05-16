@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><Graph author="martin" created="Fri May 16 14:35:50 CEST 2014" description="Salesforce to Siebel" guiVersion="3.4.3.P" id="1400247082619" licenseCode="Unlicensed" licenseType="Unknown" modified="Fri May 16 14:35:50 CEST 2014" modifiedBy="martin" name="Salesforce_to_Siebel" revision="1.0" showComponentDetails="false">
+<Global>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/Salesforce" _dataStructure="OBJECT" _id="__id" _type="Input" id="90276a01-13b7-4e27-8a18-c12eb8874688">
+<Record fieldDelimiter="," name="Salesforce" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/Salesforce/Name" containerType="SINGLE" label="Name" name="Name" type="string"/>
+<Field __sourcePath="{}/Salesforce/Website" containerType="SINGLE" label="Website" name="Website" type="string"/>
+<Field __sourcePath="{}/Salesforce/Industry" containerType="SINGLE" label="Industry" name="Industry" type="string"/>
+<Field __sourcePath="{}/Salesforce/Phone" containerType="SINGLE" label="Phone" name="Phone" type="string"/>
+<Field __sourcePath="{}/Salesforce/NumberOfEmployees" containerType="SINGLE" label="NumberOfEmployees" name="NumberOfEmployees" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/Siebel" _dataStructure="OBJECT" _id="__id" _type="Output" id="bd658603-bdf6-4f9d-9bb8-a68718e11e02">
+<Record fieldDelimiter="," name="Siebel" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/Siebel/Name" containerType="SINGLE" label="Name" name="Name" type="string"/>
+<Field __sourcePath="{}/Siebel/Home_x0020Page" containerType="SINGLE" label="Home Page" name="Home_Page" type="string"/>
+<Field __sourcePath="{}/Siebel/Industry" containerType="SINGLE" label="Industry" name="Industry" type="string"/>
+<Field __sourcePath="{}/Siebel/Phone_x0020Number" containerType="SINGLE" label="Phone Number" name="Phone_Number" type="string"/>
+<Field __sourcePath="{}/Siebel/Employees" containerType="SINGLE" label="Employees" name="Employees" type="string"/>
+</Record>
+</Metadata>
+<Dictionary>
+<Entry id="DictionaryEntry0" input="true" name="inputPayload" output="false" type="object"/>
+<Entry id="DictionaryEntry1" input="false" name="outputPayload" output="true" type="object"/>
+</Dictionary>
+</Global>
+<Phase number="0">
+<Node enabled="enabled" fileURL="dict:inputPayload" guiName="Map&lt;k,v&gt; READER" guiX="20" guiY="20" id="BEAN_READER0" type="BEAN_READER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Context outPort="0" sequenceField="__id" xpath=".">
+  <Mapping cloverField="Name" trim="true" xpath="Name"/>
+  <Mapping cloverField="Website" trim="true" xpath="Website"/>
+  <Mapping cloverField="Industry" trim="true" xpath="Industry"/>
+  <Mapping cloverField="Phone" trim="true" xpath="Phone"/>
+  <Mapping cloverField="NumberOfEmployees" trim="true" xpath="NumberOfEmployees"/>
+</Context>
+]]></attr>
+<attr name="_data_format"><![CDATA[MAP]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Salesforce to Siebel" guiX="460" guiY="20" id="FOREACH_SALESFORCE_SIEBEL" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+//END -> DO NOT REMOVE
+output.Name = input.Name;
+output.Industry = input.Industry;
+output.Home_Page = input.Website;
+output.Phone_Number = input.Phone;
+output.Employees = input.NumberOfEmployees;]]></attr>
+</Node>
+<Node cacheInMemory="true" enabled="enabled" fileURL="dict:outputPayload" guiName="Map&lt;k,v&gt; WRITER" guiX="900" guiY="20" id="MAP_WRITER0" type="MAP_WRITER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<Siebel xmlns:clover="http://www.cloveretl.com/ns/xmlmapping" clover:inPort="0">
+  <Name>$0.Name</Name>
+  <clover:element clover:name="Home Page">$0.Home_Page</clover:element>
+  <Industry>$0.Industry</Industry>
+  <clover:element clover:name="Phone Number">$0.Phone_Number</clover:element>
+  <Employees>$0.Employees</Employees>
+</Siebel>]]></attr>
+<attr name="_data_format"><![CDATA[MAP]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="BEAN_READER0:0" guiBendpoints="" id="Edge0" inPort="Port 0 (in)" metadata="90276a01-13b7-4e27-8a18-c12eb8874688" outPort="Port 0 (out)" toNode="FOREACH_SALESFORCE_SIEBEL:0"/>
+<Edge debugMode="true" fromNode="FOREACH_SALESFORCE_SIEBEL:0" guiBendpoints="" id="Edge1" inPort="Port 0 (in)" metadata="bd658603-bdf6-4f9d-9bb8-a68718e11e02" outPort="Port 0 (out)" toNode="MAP_WRITER0:0"/>
+</Phase>
+</Graph>
