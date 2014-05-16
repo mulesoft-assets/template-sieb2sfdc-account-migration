@@ -76,6 +76,7 @@ public class BusinessLogicIT extends FunctionalTestCase {
 		deleteTestAccountsFromSandBoxB(createdAccountsInA);
 	}
 
+	@Ignore
 	@Test
 	public void testMainFlow() throws Exception {
 		runFlow("mainFlow");

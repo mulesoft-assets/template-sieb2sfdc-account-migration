@@ -63,7 +63,7 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
             </siebel:query-business-components>
         </batch:input> 
         <batch:process-records>
-            <batch:step name="transformAccountSiebelToSalesforceStep">
+            <batch:step name="transformFieldsFromSiebelToSalesforceStep">
                 <data-mapper:transform config-ref="map_to_map" doc:name="Map To Map"/>
             </batch:step>
             <batch:step name="getAccountFromSalesforceStep">
