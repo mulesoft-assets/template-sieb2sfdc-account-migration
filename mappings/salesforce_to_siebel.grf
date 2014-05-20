@@ -8,6 +8,8 @@
 <Field __sourcePath="{}/Salesforce/Industry" containerType="SINGLE" label="Industry" name="Industry" type="string"/>
 <Field __sourcePath="{}/Salesforce/Phone" containerType="SINGLE" label="Phone" name="Phone" type="string"/>
 <Field __sourcePath="{}/Salesforce/NumberOfEmployees" containerType="SINGLE" label="NumberOfEmployees" name="NumberOfEmployees" type="string"/>
+<Field __sourcePath="{}/Salesforce/City" containerType="SINGLE" label="City" name="City" type="string"/>
+<Field __sourcePath="{}/Salesforce/Street" containerType="SINGLE" label="Street" name="Street" type="string"/>
 </Record>
 </Metadata>
 <Metadata __index="0" __referenceCounter="1" __sourcePath="{}/Siebel" _dataStructure="OBJECT" _id="__id" _type="Output" id="bd658603-bdf6-4f9d-9bb8-a68718e11e02">
@@ -18,6 +20,10 @@
 <Field __sourcePath="{}/Siebel/Industry" containerType="SINGLE" label="Industry" name="Industry" type="string"/>
 <Field __sourcePath="{}/Siebel/Phone_x0020Number" containerType="SINGLE" label="Phone Number" name="Phone_Number" type="string"/>
 <Field __sourcePath="{}/Siebel/Employees" containerType="SINGLE" label="Employees" name="Employees" type="string"/>
+<Field __sourcePath="{}/Siebel/Industry_x0020Id" containerType="SINGLE" label="Industry Id" name="Industry_Id" type="string"/>
+<Field __sourcePath="{}/Siebel/SIC_x0020Code" containerType="SINGLE" label="SIC Code" name="SIC_Code" type="string"/>
+<Field __sourcePath="{}/Siebel/City" containerType="SINGLE" label="City" name="City" type="string"/>
+<Field __sourcePath="{}/Siebel/Street_x0020Address" containerType="SINGLE" label="Street Address" name="Street_Address" type="string"/>
 </Record>
 </Metadata>
 <Dictionary>
@@ -34,6 +40,8 @@
   <Mapping cloverField="Industry" trim="true" xpath="Industry"/>
   <Mapping cloverField="Phone" trim="true" xpath="Phone"/>
   <Mapping cloverField="NumberOfEmployees" trim="true" xpath="NumberOfEmployees"/>
+  <Mapping cloverField="City" trim="true" xpath="City"/>
+  <Mapping cloverField="Street" trim="true" xpath="Street"/>
 </Context>
 ]]></attr>
 <attr name="_data_format"><![CDATA[MAP]]></attr>
@@ -44,10 +52,13 @@
 output.__id = input.__id;
 //END -> DO NOT REMOVE
 output.Name = input.Name;
-output.Industry = input.Industry;
 output.Home_Page = input.Website;
 output.Phone_Number = input.Phone;
-output.Employees = input.NumberOfEmployees;]]></attr>
+output.Employees = input.NumberOfEmployees;
+output.SIC_Code = input.Industry;
+output.City = input.City;
+output.Street_Address = input.Street;
+]]></attr>
 </Node>
 <Node cacheInMemory="true" enabled="enabled" fileURL="dict:outputPayload" guiName="Map&lt;k,v&gt; WRITER" guiX="900" guiY="20" id="MAP_WRITER0" type="MAP_WRITER">
 <attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -57,6 +68,10 @@ output.Employees = input.NumberOfEmployees;]]></attr>
   <Industry>$0.Industry</Industry>
   <clover:element clover:name="Phone Number">$0.Phone_Number</clover:element>
   <Employees>$0.Employees</Employees>
+  <clover:element clover:name="Industry Id">$0.Industry_Id</clover:element>
+  <clover:element clover:name="SIC Code">$0.SIC_Code</clover:element>
+  <City>$0.City</City>
+  <clover:element clover:name="Street Address">$0.Street_Address</clover:element>
 </Siebel>]]></attr>
 <attr name="_data_format"><![CDATA[MAP]]></attr>
 </Node>

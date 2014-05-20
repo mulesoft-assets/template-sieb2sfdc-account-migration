@@ -21,6 +21,8 @@ public class AccountDateComparatorTest {
 	private static final String SIEBEL_DATETIME = "12/09/2013 15:15:33";
 	
 	private static final String SIEBEL_DATETIME2 = "12/10/2013 15:15:33";
+	
+	private static final String SIEBEL_TIME_OFFSET = "-7";
 
 	@Test(expected = IllegalArgumentException.class)
 	public void nullSiebelAccount() {
@@ -29,7 +31,7 @@ public class AccountDateComparatorTest {
 		Map<String, Object> salesforceAccount = new HashMap<String, Object>();
 		salesforceAccount.put(KEY_LAST_MODIFIED_DATE, SALESFORCE_DATETIME);
 
-		AccountDateComparator.isAfter(siebelAccount, salesforceAccount);
+		AccountDateComparator.isAfter(siebelAccount, salesforceAccount, SIEBEL_TIME_OFFSET);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -39,7 +41,7 @@ public class AccountDateComparatorTest {
 
 		Map<String, Object> salesforceAccount = null;
 
-		AccountDateComparator.isAfter(siebelAccount, salesforceAccount);
+		AccountDateComparator.isAfter(siebelAccount, salesforceAccount, SIEBEL_TIME_OFFSET);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -49,7 +51,7 @@ public class AccountDateComparatorTest {
 		Map<String, Object> salesforceAccount = new HashMap<String, Object>();
 		salesforceAccount.put(KEY_LAST_MODIFIED_DATE, SALESFORCE_DATETIME);
 
-		AccountDateComparator.isAfter(siebelAccount, salesforceAccount);
+		AccountDateComparator.isAfter(siebelAccount, salesforceAccount, SIEBEL_TIME_OFFSET);
 	}
 
 	public void emptySalesforceAccount() {
@@ -58,7 +60,8 @@ public class AccountDateComparatorTest {
 
 		Map<String, Object> salesforceAccount = new HashMap<String, Object>();
 
-		Assert.assertTrue("Siebel account should be after Salesforce account", AccountDateComparator.isAfter(siebelAccount, salesforceAccount));
+		Assert.assertTrue("Siebel account should be after Salesforce account",
+				AccountDateComparator.isAfter(siebelAccount, salesforceAccount, SIEBEL_TIME_OFFSET));
 	}
 
 	@Test
@@ -69,7 +72,8 @@ public class AccountDateComparatorTest {
 		Map<String, Object> salesforceAccount = new HashMap<String, Object>();
 		salesforceAccount.put(KEY_LAST_MODIFIED_DATE, SALESFORCE_DATETIME);
 
-		Assert.assertTrue("Siebel account should be after Salesforce account", AccountDateComparator.isAfter(siebelAccount, salesforceAccount));
+		Assert.assertTrue("Siebel account should be after Salesforce account",
+				AccountDateComparator.isAfter(siebelAccount, salesforceAccount, SIEBEL_TIME_OFFSET));
 	}
 
 	@Test
@@ -80,7 +84,8 @@ public class AccountDateComparatorTest {
 		Map<String, Object> salesforceAccount = new HashMap<String, Object>();
 		salesforceAccount.put(KEY_LAST_MODIFIED_DATE, SALESFORCE_DATETIME);
 
-		Assert.assertFalse("Siebel account should not be after Salesforce account", AccountDateComparator.isAfter(siebelAccount, salesforceAccount));
+		Assert.assertFalse("Siebel account should not be after Salesforce account",
+				AccountDateComparator.isAfter(siebelAccount, salesforceAccount, SIEBEL_TIME_OFFSET));
 	}
 
 	@Test
@@ -91,7 +96,8 @@ public class AccountDateComparatorTest {
 		Map<String, Object> salesforceAccount = new HashMap<String, Object>();
 		salesforceAccount.put(KEY_LAST_MODIFIED_DATE, SALESFORCE_DATETIME);
 
-		Assert.assertFalse("Siebel account should not be after Salesforce account", AccountDateComparator.isAfter(siebelAccount, salesforceAccount));
+		Assert.assertFalse("Siebel account should not be after Salesforce account",
+				AccountDateComparator.isAfter(siebelAccount, salesforceAccount, SIEBEL_TIME_OFFSET));
 	}
 
 }

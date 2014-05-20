@@ -21,6 +21,8 @@ import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.modules.siebel.api.model.response.CreateResult;
+import org.mule.modules.siebel.api.model.response.UpsertResult;
 import org.mule.processor.chain.SubflowInterceptingChainLifecycleWrapper;
 import org.mule.tck.junit4.FunctionalTestCase;
 import org.mule.transport.NullPayload;
@@ -47,6 +49,7 @@ public class BusinessLogicIT extends FunctionalTestCase {
 	private static final String KEY_PHONE = "Phone";
 	private static final String KEY_NUMBER_OF_EMPLOYEES = "NumberOfEmployees";
 	private static final String KEY_INDUSTRY = "Industry";
+	private static final String KEY_CITY = "City";
 	
 	private static final String MAPPINGS_FOLDER_PATH = "./mappings";
 	private static final String TEST_FLOWS_FOLDER_PATH = "./src/test/resources/flows/";
@@ -76,7 +79,7 @@ public class BusinessLogicIT extends FunctionalTestCase {
 		deleteTestAccountsFromSandBoxB(createdAccountsInA);
 	}
 
-	@Ignore
+//	@Ignore
 	@Test
 	public void testMainFlow() throws Exception {
 		runFlow("mainFlow");
@@ -140,7 +143,9 @@ public class BusinessLogicIT extends FunctionalTestCase {
 		account_0_A.put(KEY_WEBSITE, "http://acme.org");
 		account_0_A.put(KEY_PHONE, "123");
 		account_0_A.put(KEY_NUMBER_OF_EMPLOYEES, 6000);
-		account_0_A.put(KEY_INDUSTRY, "Education");
+		account_0_A.put(KEY_CITY, "Las Vegas");
+		account_0_A.put("Street", "street0A");
+//		account_0_A.put(KEY_INDUSTRY, "Education");
 		createdAccountsInA.add(account_0_A);
 				
 		// This account should be synced (update)
@@ -149,7 +154,9 @@ public class BusinessLogicIT extends FunctionalTestCase {
 		account_1_A.put(KEY_WEBSITE, "http://example.edu");
 		account_1_A.put(KEY_PHONE, "911");
 		account_1_A.put(KEY_NUMBER_OF_EMPLOYEES, 7100);
-		account_1_A.put(KEY_INDUSTRY, "Government");
+		account_1_A.put(KEY_CITY, "Jablonica");
+		account_1_A.put("Street", "street1A");
+//		account_1_A.put(KEY_INDUSTRY, "Government");
 		createdAccountsInA.add(account_1_A);
 
 		// This account should not be synced because of industry
@@ -158,14 +165,26 @@ public class BusinessLogicIT extends FunctionalTestCase {
 		account_2_A.put(KEY_WEBSITE, "http://energy.edu");
 		account_2_A.put(KEY_PHONE, "333");
 		account_2_A.put(KEY_NUMBER_OF_EMPLOYEES, 13204);
-		account_2_A.put(KEY_INDUSTRY, "Energetic");
+		account_2_A.put(KEY_CITY, "London");
+		account_2_A.put("Street", "street2A");
+//		account_2_A.put(KEY_INDUSTRY, "Energetic");
 		createdAccountsInA.add(account_2_A);
 
 		SubflowInterceptingChainLifecycleWrapper createAccountInAFlow = getSubFlow("createAccountFlowA");
 		createAccountInAFlow.initialise();
-	
-		createAccountInAFlow.process(getTestEvent(createdAccountsInA, MessageExchangePattern.REQUEST_RESPONSE));
-	
+
+		MuleEvent event = createAccountInAFlow.process(getTestEvent(createdAccountsInA, MessageExchangePattern.REQUEST_RESPONSE));
+		
+		CreateResult cr = (CreateResult) event.getMessage().getPayload();
+		if (!cr.isSuccess()) {
+			throw cr.getError();
+		}
+		
+		// assign Siebel-generated IDs
+		for (int i = 0; i < createdAccountsInA.size(); i++) {
+			createdAccountsInA.get(i).put(KEY_ID, cr.getCreatedObjects().get(i));
+		}
+
 		System.out.println("Results after adding: " + createdAccountsInA.toString());
 	}
 
@@ -228,7 +247,7 @@ public class BusinessLogicIT extends FunctionalTestCase {
 		for (Map<String, Object> c : entitities) {
 			idList.add(c.get(KEY_ID).toString());
 		}
-		deleteFlow.process(getTestEvent(idList, MessageExchangePattern.REQUEST_RESPONSE));
+		deleteFlow.process(getTestEvent(NullPayload.getInstance(), MessageExchangePattern.REQUEST_RESPONSE));
 	}
 
 }
