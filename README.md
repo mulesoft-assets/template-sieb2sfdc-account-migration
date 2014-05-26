@@ -89,12 +89,12 @@ In order to use this Anypoint Template you need to configure properties (Credent
 + sieb.port `2321`
 
 #### SalesForce Connector configuration
-+ sfdc.username `joan.baez@orgb`
++ sfdc.username `joan.baez@org`
 + sfdc.password `JoanBaez456`
 + sfdc.securityToken `ces56arl7apQs56XTddf34X`
 + sfdc.url `https://login.salesforce.com/services/Soap/u/26.0`
 
-#### EMail Details
+#### E-Mail Details
 + mail.from `batch.migrateaccounts.migration%40mulesoft.com`
 + mail.to `cesar.garcia@mulesoft.com`
 + mail.subject `Batch Job Finished Report`
