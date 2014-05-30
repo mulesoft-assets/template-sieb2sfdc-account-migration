@@ -30,7 +30,9 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
     <batch:job name="migrateAccountsBatch">
         <batch:threading-profile poolExhaustedAction="WAIT"/>
         <batch:input>
-            <siebel:query-business-components config-ref="Oracle_Siebel_Business_Objects" businessObjectComponentType="Account.Account" doc:name="query Accounts from Siebel" searchExpression="[Employees] &gt; 5000 AND ([Industry] = &quot;Schools&quot; OR [Industry] = &quot;Energy&quot;)">
+            <siebel:query-business-components config-ref="Oracle_Siebel_Business_Objects" businessObjectComponentType="Account.Account" doc:name="query Accounts from Siebel"
+            	searchExpression="[Employees] &gt; 5000">
+<!--             	searchExpression="[Employees] &gt; 5000 AND ([Industry] = &quot;Schools&quot; OR [Industry] = &quot;Energy&quot;)" -->
                 <siebel:fields-to-retrieve>
                 	<siebel:fields-to-retrieve>Account Number</siebel:fields-to-retrieve> <!--  AccountNumber -->
                 	<siebel:fields-to-retrieve>Annual Revenue</siebel:fields-to-retrieve>
@@ -73,7 +75,7 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
             </batch:step>
             <batch:step name="selectNewerAccountStep" accept-expression="!(recordVars['accountInSalesforce'] is NullPayload)">
                 <choice doc:name="Choice">
-                    <when expression="#[org.mule.templates.util.AccountDateComparator.isAfter(payload, recordVars['accountInSalesforce'], '$sieb.timeOffset')]">
+                    <when expression="#[org.mule.templates.util.AccountDateComparator.isAfter(payload, recordVars['accountInSalesforce'], '${sieb.timeOffset}')]">
                         <expression-component doc:name="define Id for SalesForce"><![CDATA[payload['Id'] = recordVars['accountInSalesforce']['Id']]]></expression-component>
                     </when>
                     <otherwise>

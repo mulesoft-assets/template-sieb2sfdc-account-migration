@@ -14,15 +14,12 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.config.MuleProperties;
-import org.mule.api.lifecycle.InitialisationException;
 import org.mule.modules.siebel.api.model.response.CreateResult;
-import org.mule.modules.siebel.api.model.response.UpsertResult;
 import org.mule.processor.chain.SubflowInterceptingChainLifecycleWrapper;
 import org.mule.tck.junit4.FunctionalTestCase;
 import org.mule.transport.NullPayload;
@@ -58,8 +55,8 @@ public class BusinessLogicIT extends FunctionalTestCase {
 	protected static final int TIMEOUT_SEC = 120;
 	protected static final String TEMPLATE_NAME = "account-migration";
 
-	protected SubflowInterceptingChainLifecycleWrapper retrieveAccountFromBFlow;
-	private List<Map<String, Object>> createdAccountsInA = new ArrayList<Map<String, Object>>();
+	protected SubflowInterceptingChainLifecycleWrapper retrieveAccountFromSalesforceFlow;
+	private List<Map<String, Object>> createdAccountsInSiebel = new ArrayList<Map<String, Object>>();
 	private BatchTestHelper helper;
 
 	@Before
@@ -67,16 +64,16 @@ public class BusinessLogicIT extends FunctionalTestCase {
 		helper = new BatchTestHelper(muleContext);
 	
 		// Flow to retrieve accounts from target system after sync in g
-		retrieveAccountFromBFlow = getSubFlow("retrieveAccountFromBFlow");
-		retrieveAccountFromBFlow.initialise();
+		retrieveAccountFromSalesforceFlow = getSubFlow("retrieveAccountFromSalesforceFlow");
+		retrieveAccountFromSalesforceFlow.initialise();
 	
 		createTestDataInSandBox();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		deleteTestAccountsFromSandBoxA(createdAccountsInA);
-		deleteTestAccountsFromSandBoxB(createdAccountsInA);
+		deleteTestAccountsFromSiebel(createdAccountsInSiebel);
+		deleteTestAccountsFromSalesforce(createdAccountsInSiebel);
 	}
 
 //	@Ignore
@@ -88,17 +85,17 @@ public class BusinessLogicIT extends FunctionalTestCase {
 		helper.awaitJobTermination(TIMEOUT_SEC * 1000, 500);
 		helper.assertJobWasSuccessful();
 	
-		Map<String, Object> payload0 = invokeRetrieveFlow(retrieveAccountFromBFlow, createdAccountsInA.get(0));
+		Map<String, Object> payload0 = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, createdAccountsInSiebel.get(0));
 		Assert.assertNotNull("The account 0 should have been sync but is null", payload0);
-		Assert.assertEquals("The account 0 should have been sync (Website)", createdAccountsInA.get(0).get(KEY_WEBSITE), payload0.get(KEY_WEBSITE));
-		Assert.assertEquals("The account 0 should have been sync (Phone)", createdAccountsInA.get(0).get(KEY_PHONE), payload0.get(KEY_PHONE));
+		Assert.assertEquals("The account 0 should have been sync (Website)", createdAccountsInSiebel.get(0).get(KEY_WEBSITE), payload0.get(KEY_WEBSITE));
+		Assert.assertEquals("The account 0 should have been sync (Phone)", createdAccountsInSiebel.get(0).get(KEY_PHONE), payload0.get(KEY_PHONE));
 
-		Map<String, Object>  payload1 = invokeRetrieveFlow(retrieveAccountFromBFlow, createdAccountsInA.get(1));
+		Map<String, Object>  payload1 = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, createdAccountsInSiebel.get(1));
 		Assert.assertNotNull("The account 1 should have been sync but is null", payload1);
-		Assert.assertEquals("The account 1 should have been sync (Website)", createdAccountsInA.get(1).get(KEY_WEBSITE), payload1.get(KEY_WEBSITE));
-		Assert.assertEquals("The account 1 should have been sync (Phone)", createdAccountsInA.get(1).get(KEY_PHONE), payload1.get(KEY_PHONE));
+		Assert.assertEquals("The account 1 should have been sync (Website)", createdAccountsInSiebel.get(1).get(KEY_WEBSITE), payload1.get(KEY_WEBSITE));
+		Assert.assertEquals("The account 1 should have been sync (Phone)", createdAccountsInSiebel.get(1).get(KEY_PHONE), payload1.get(KEY_PHONE));
 		
-		Map<String, Object>  payload2 = invokeRetrieveFlow(retrieveAccountFromBFlow, createdAccountsInA.get(2));
+		Map<String, Object>  payload2 = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, createdAccountsInSiebel.get(2));
 		Assert.assertNull("The account 2 should have not been sync", payload2);
 	}
 
@@ -122,70 +119,68 @@ public class BusinessLogicIT extends FunctionalTestCase {
 		
 		String uniqueSuffix = "_" + TEMPLATE_NAME + "_" + UUID.getUUID();
 		
-		Map<String, Object> account_3_B = new HashMap<String, Object>();
-		account_3_B.put(KEY_NAME, "Name_3_B" + uniqueSuffix);
-		account_3_B.put(KEY_WEBSITE, "http://example.com");
-		account_3_B.put(KEY_PHONE, "112");
-		List<Map<String, Object>> createdAccountInB = new ArrayList<Map<String, Object>>();
-		createdAccountInB.add(account_3_B);
+		Map<String, Object> salesforceAccount3 = new HashMap<String, Object>();
+		salesforceAccount3.put(KEY_NAME, "Name_3_SFDC" + uniqueSuffix);
+		salesforceAccount3.put(KEY_WEBSITE, "http://example.com");
+		salesforceAccount3.put(KEY_PHONE, "112");
+		List<Map<String, Object>> createdAccountInSalesforce = new ArrayList<Map<String, Object>>();
+		createdAccountInSalesforce.add(salesforceAccount3);
 	
-		SubflowInterceptingChainLifecycleWrapper createAccountInBFlow = getSubFlow("createAccountFlowB");
-		createAccountInBFlow.initialise();
-		createAccountInBFlow.process(getTestEvent(createdAccountInB, MessageExchangePattern.REQUEST_RESPONSE));
+		SubflowInterceptingChainLifecycleWrapper createAccountInSalesforceFlow = getSubFlow("createAccountsInSalesforceFlow");
+		createAccountInSalesforceFlow.initialise();
+		createAccountInSalesforceFlow.process(getTestEvent(createdAccountInSalesforce, MessageExchangePattern.REQUEST_RESPONSE));
 	
 		Thread.sleep(1001); // this is here to prevent equal LastModifiedDate
 		
 		// Create accounts in source system to be or not to be synced
 	
 		// This account should be synced
-		Map<String, Object> account_0_A = new HashMap<String, Object>();
-		account_0_A.put(KEY_NAME, "Name_0_A" + uniqueSuffix);
-		account_0_A.put(KEY_WEBSITE, "http://acme.org");
-		account_0_A.put(KEY_PHONE, "123");
-		account_0_A.put(KEY_NUMBER_OF_EMPLOYEES, 6000);
-		account_0_A.put(KEY_CITY, "Las Vegas");
-		account_0_A.put("Street", "street0A");
-//		account_0_A.put(KEY_INDUSTRY, "Education");
-		createdAccountsInA.add(account_0_A);
+		Map<String, Object> siebelAccount0 = new HashMap<String, Object>();
+		siebelAccount0.put(KEY_NAME, "Name_0_SIEB" + uniqueSuffix);
+		siebelAccount0.put(KEY_WEBSITE, "http://acme.org");
+		siebelAccount0.put(KEY_PHONE, "123");
+		siebelAccount0.put(KEY_NUMBER_OF_EMPLOYEES, 6000);
+		siebelAccount0.put(KEY_CITY, "Las Vegas");
+		siebelAccount0.put("Street", "street0A" + uniqueSuffix);
+//		siebelAccount0.put(KEY_INDUSTRY, "Education");
+		createdAccountsInSiebel.add(siebelAccount0);
 				
 		// This account should be synced (update)
-		Map<String, Object> account_1_A = new HashMap<String, Object>();
-		account_1_A.put(KEY_NAME,  account_3_B.get(KEY_NAME));
-		account_1_A.put(KEY_WEBSITE, "http://example.edu");
-		account_1_A.put(KEY_PHONE, "911");
-		account_1_A.put(KEY_NUMBER_OF_EMPLOYEES, 7100);
-		account_1_A.put(KEY_CITY, "Jablonica");
-		account_1_A.put("Street", "street1A");
-//		account_1_A.put(KEY_INDUSTRY, "Government");
-		createdAccountsInA.add(account_1_A);
+		Map<String, Object> siebelAccount1 = new HashMap<String, Object>();
+		siebelAccount1.put(KEY_NAME,  salesforceAccount3.get(KEY_NAME));
+		siebelAccount1.put(KEY_WEBSITE, "http://example.edu");
+		siebelAccount1.put(KEY_PHONE, "911");
+		siebelAccount1.put(KEY_NUMBER_OF_EMPLOYEES, 7100);
+		siebelAccount1.put(KEY_CITY, "Jablonica");
+		siebelAccount1.put("Street", "street1A" + uniqueSuffix);
+//		siebelAccount1.put(KEY_INDUSTRY, "Government");
+		createdAccountsInSiebel.add(siebelAccount1);
 
-		// This account should not be synced because of industry
-		Map<String, Object> account_2_A = new HashMap<String, Object>();
-		account_2_A.put(KEY_NAME, "Name_2_A" + uniqueSuffix);
-		account_2_A.put(KEY_WEBSITE, "http://energy.edu");
-		account_2_A.put(KEY_PHONE, "333");
-		account_2_A.put(KEY_NUMBER_OF_EMPLOYEES, 13204);
-		account_2_A.put(KEY_CITY, "London");
-		account_2_A.put("Street", "street2A");
-//		account_2_A.put(KEY_INDUSTRY, "Energetic");
-		createdAccountsInA.add(account_2_A);
+		// This account should not be synced because of employees// was: industry
+		Map<String, Object> siebelAccount2 = new HashMap<String, Object>();
+		siebelAccount2.put(KEY_NAME, "Name_2_SIEB" + uniqueSuffix);
+		siebelAccount2.put(KEY_WEBSITE, "http://energy.edu");
+		siebelAccount2.put(KEY_PHONE, "333");
+		siebelAccount2.put(KEY_NUMBER_OF_EMPLOYEES, 204);
+		siebelAccount2.put(KEY_CITY, "London");
+		siebelAccount2.put("Street", "street2A" + uniqueSuffix);
+//		siebelAccount2.put(KEY_INDUSTRY, "Energetic");
+		createdAccountsInSiebel.add(siebelAccount2);
 
-		SubflowInterceptingChainLifecycleWrapper createAccountInAFlow = getSubFlow("createAccountFlowA");
-		createAccountInAFlow.initialise();
+		SubflowInterceptingChainLifecycleWrapper createAccountInSiebelFlow = getSubFlow("createAccountsInSiebelFlow");
+		createAccountInSiebelFlow.setFlowConstruct(getTestService());
+		createAccountInSiebelFlow.initialise();
 
-		MuleEvent event = createAccountInAFlow.process(getTestEvent(createdAccountsInA, MessageExchangePattern.REQUEST_RESPONSE));
+		MuleEvent event = createAccountInSiebelFlow.process(getTestEvent(createdAccountsInSiebel, MessageExchangePattern.REQUEST_RESPONSE));
 		
-		CreateResult cr = (CreateResult) event.getMessage().getPayload();
-		if (!cr.isSuccess()) {
-			throw cr.getError();
-		}
+		List<?> results = (List<?>) event.getMessage().getPayload();
 		
 		// assign Siebel-generated IDs
-		for (int i = 0; i < createdAccountsInA.size(); i++) {
-			createdAccountsInA.get(i).put(KEY_ID, cr.getCreatedObjects().get(i));
+		for (int i = 0; i < createdAccountsInSiebel.size(); i++) {
+			createdAccountsInSiebel.get(i).put(KEY_ID, ((CreateResult) results.get(i)).getCreatedObjects().get(0));
 		}
 
-		System.out.println("Results after adding: " + createdAccountsInA.toString());
+		System.out.println("Results after adding: " + createdAccountsInSiebel.toString());
 	}
 
 	private String getTestFlows() {
@@ -223,31 +218,34 @@ public class BusinessLogicIT extends FunctionalTestCase {
 		return resultPayload instanceof NullPayload ? null : (Map<String, Object>) resultPayload;
 	}
 	
-	private void deleteTestAccountsFromSandBoxA(List<Map<String, Object>> createdAccountsInA) throws InitialisationException, MuleException, Exception {
-		SubflowInterceptingChainLifecycleWrapper deleteAccountFromAFlow = getSubFlow("deleteAccountFromAFlow");
-		deleteAccountFromAFlow.initialise();
-		deleteTestEntityFromSandBox(deleteAccountFromAFlow, createdAccountsInA);
+	private void deleteTestAccountsFromSiebel(List<Map<String, Object>> createdAccountsInSiebel) throws Exception {
+		SubflowInterceptingChainLifecycleWrapper deleteAccountFromSiebelFlow = getSubFlow("deleteAccountsFromSiebelFlow");
+		deleteAccountFromSiebelFlow.initialise();
+		System.out.println("CAIS: " + createdAccountsInSiebel);
+		MuleEvent result = deleteTestEntityFromSandBox(deleteAccountFromSiebelFlow, createdAccountsInSiebel);
+		System.out.println("DR:" + result.getMessage().getPayload());
 	}
 
-	private void deleteTestAccountsFromSandBoxB(List<Map<String, Object>> createdAccountsInA) throws InitialisationException, MuleException, Exception {
-		List<Map<String, Object>> createdAccountsInB = new ArrayList<Map<String, Object>>();
+	private void deleteTestAccountsFromSalesforce(List<Map<String, Object>> createdAccountsInA) throws Exception {
+		List<Map<String, Object>> createdAccountsInSalesforce = new ArrayList<Map<String, Object>>();
 		for (Map<String, Object> c : createdAccountsInA) {
-			Map<String, Object> account = invokeRetrieveFlow(retrieveAccountFromBFlow, c);
+			Map<String, Object> account = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, c);
 			if (account != null) {
-				createdAccountsInB.add(account);
+				createdAccountsInSalesforce.add(account);
 			}
 		}
-		SubflowInterceptingChainLifecycleWrapper deleteAccountFromBFlow = getSubFlow("deleteAccountFromBFlow");
-		deleteAccountFromBFlow.initialise();
-		deleteTestEntityFromSandBox(deleteAccountFromBFlow, createdAccountsInB);
+		SubflowInterceptingChainLifecycleWrapper deleteAccountFromSalesforceFlow = getSubFlow("deleteAccountsFromSalesforceFlow");
+		deleteAccountFromSalesforceFlow.initialise();
+		deleteTestEntityFromSandBox(deleteAccountFromSalesforceFlow, createdAccountsInSalesforce);
 	}
 	
-	private void deleteTestEntityFromSandBox(SubflowInterceptingChainLifecycleWrapper deleteFlow, List<Map<String, Object>> entitities) throws MuleException, Exception {
+	private MuleEvent deleteTestEntityFromSandBox(SubflowInterceptingChainLifecycleWrapper deleteFlow, List<Map<String, Object>> entitities) throws Exception {
 		List<String> idList = new ArrayList<String>();
 		for (Map<String, Object> c : entitities) {
 			idList.add(c.get(KEY_ID).toString());
 		}
-		deleteFlow.process(getTestEvent(NullPayload.getInstance(), MessageExchangePattern.REQUEST_RESPONSE));
+		System.out.println("IDS: " + idList);
+		return deleteFlow.process(getTestEvent(idList, MessageExchangePattern.REQUEST_RESPONSE));
 	}
 
 }

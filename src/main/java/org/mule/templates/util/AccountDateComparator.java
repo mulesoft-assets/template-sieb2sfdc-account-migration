@@ -2,7 +2,6 @@ package org.mule.templates.util;
 
 import java.text.ParseException;
 import java.util.Map;
-import java.util.TimeZone;
 
 import org.apache.commons.lang.Validate;
 import org.joda.time.DateTime;
@@ -11,7 +10,6 @@ import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.joda.time.format.PeriodFormat;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
