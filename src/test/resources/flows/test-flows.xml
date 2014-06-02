@@ -1,15 +1,16 @@
 
 
-<mule xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" xmlns:siebel="http://www.mulesoft.org/schema/mule/siebel" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" xmlns:siebel="http://www.mulesoft.org/schema/mule/siebel" xmlns:db="http://www.mulesoft.org/schema/mule/db"
 	xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.6.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
 http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
 http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/siebel/2.0/mule-siebel.xsd
-http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd">
+http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
     <data-mapper:config name="salesforce_to_siebel" transformationGraphPath="salesforce_to_siebel.grf" doc:name="salesforce_to_siebel"/>
-       <sub-flow name="createAccountsInSiebelFlow" doc:name="createAccountsInSiebelFlow">
+    <flow name="createAccountsInSiebelFlow" doc:name="createAccountsInSiebelFlow">
         <collection-splitter doc:name="Collection Splitter"/>
         <processor-chain doc:name="Processor Chain">
             <data-mapper:transform config-ref="salesforce_to_siebel" doc:name="Salesforce to Siebel"/>
@@ -18,7 +19,7 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
             </siebel:create-business-component>
         </processor-chain>
         <collection-aggregator failOnTimeout="true" doc:name="Collection Aggregator"/>
-    </sub-flow>
+    </flow>
     
     <sub-flow name="createAccountsInSalesforceFlow" doc:name="createAccountsInSalesforceFlow">
         <sfdc:create config-ref="Salesforce" type="Account" doc:name="Salesforce">

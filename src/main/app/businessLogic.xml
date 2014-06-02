@@ -11,7 +11,7 @@ xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc"
 xmlns:smtp="http://www.mulesoft.org/schema/mule/smtp"
 xmlns:json="http://www.mulesoft.org/schema/mule/json"
 xmlns:spring="http://www.springframework.org/schema/beans" 
-version="EE-3.5.0" 
+version="EE-3.6.0" 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
@@ -84,8 +84,9 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
                 </choice>
             </batch:step>
             <batch:step name="createAccountsInSalesforceStep" accept-expression="!(payload is NullPayload)">
-                <expression-component doc:name="remove field LastModifiedDate"><![CDATA[payload.remove('LastModifiedDate');]]></expression-component>
-                <expression-component doc:name="changing type of field NumberOfEmployees to int"><![CDATA[if (payload.get('NumberOfEmployees').isEmpty()) {
+                <expression-component doc:name="prepare for upsert"><![CDATA[payload.remove('LastModifiedDate');
+
+if (payload.get('NumberOfEmployees').isEmpty()) {
 	payload.remove('NumberOfEmployees') 
 } else {
 	int intNumberOfEmployees = Integer.parseInt(payload.get('NumberOfEmployees'));
@@ -99,7 +100,7 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
             </batch:step>
         </batch:process-records>
         <batch:on-complete>
-            <all doc:name="All">
+            <scatter-gather doc:name="All">
                 <processor-chain>
             		<json:object-to-json-transformer doc:name="transform BatchJobInstance to JSON"/>
             		<logger message="Migration process has finished: #[payload]" level="INFO" doc:name="log 'Migration process has finished'"/>
@@ -108,7 +109,7 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
                 	<json:object-to-json-transformer doc:name="transform BatchJobInstance to JSON"/>
 					<smtp:outbound-endpoint host="${smtp.host}" port="${smtp.port}" user="${smtp.user}" password="${smtp.password}" to="${mail.to}" from="${mail.from}" subject="${mail.subject}" responseTimeout="10000" connector-ref="gmailConnector" doc:name="send mail"/>
 				</processor-chain>
-            </all>
+            </scatter-gather>
         </batch:on-complete>
     </batch:job>
     <flow name="mainFlow" doc:name="mainFlow" processingStrategy="synchronous" doc:description="This flow is the entry point to the Template business logic.

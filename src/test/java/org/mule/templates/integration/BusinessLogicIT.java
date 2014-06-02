@@ -167,11 +167,12 @@ public class BusinessLogicIT extends FunctionalTestCase {
 //		siebelAccount2.put(KEY_INDUSTRY, "Energetic");
 		createdAccountsInSiebel.add(siebelAccount2);
 
-		SubflowInterceptingChainLifecycleWrapper createAccountInSiebelFlow = getSubFlow("createAccountsInSiebelFlow");
-		createAccountInSiebelFlow.setFlowConstruct(getTestService());
-		createAccountInSiebelFlow.initialise();
-
-		MuleEvent event = createAccountInSiebelFlow.process(getTestEvent(createdAccountsInSiebel, MessageExchangePattern.REQUEST_RESPONSE));
+		MuleEvent event = runFlow("createAccountsInSiebelFlow", createdAccountsInSiebel);
+//		SubflowInterceptingChainLifecycleWrapper createAccountInSiebelFlow = getSubFlow("createAccountsInSiebelFlow");
+//		createAccountInSiebelFlow.setFlowConstruct(getTestService());
+//		createAccountInSiebelFlow.initialise();
+//
+//		MuleEvent event = createAccountInSiebelFlow.process(getTestEvent(createdAccountsInSiebel, MessageExchangePattern.REQUEST_RESPONSE));
 		
 		List<?> results = (List<?>) event.getMessage().getPayload();
 		
