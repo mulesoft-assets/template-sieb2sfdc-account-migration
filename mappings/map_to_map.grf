@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><Graph author="martin" created="Wed May 14 10:16:14 CEST 2014" description="Map To Map" guiVersion="3.4.3.P" id="1400061382383" licenseCode="Unlicensed" licenseType="Unknown" modified="Wed May 14 10:16:14 CEST 2014" modifiedBy="martin" name="Map_To_Map" revision="1.0" showComponentDetails="false">
+<?xml version="1.0" encoding="UTF-8"?><Graph __version="3.5.0" author="martin" created="Wed May 14 10:16:14 CEST 2014" description="Map To Map" guiVersion="3.4.3.P" id="1400061382383" licenseCode="Unlicensed" licenseType="Unknown" modified="Wed May 14 10:16:14 CEST 2014" modifiedBy="martin" name="Map_To_Map" revision="1.0" showComponentDetails="false">
 <Global>
 <Metadata __index="0" __referenceCounter="1" __sourcePath="{}/Salesforce" _dataStructure="OBJECT" _id="__id" _type="Output" id="48ee619a-4165-4dce-a483-ee30eec926e4">
 <Record fieldDelimiter="," name="Salesforce" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
@@ -14,7 +14,6 @@
 <Field __sourcePath="{}/Salesforce/Description" containerType="SINGLE" label="Description" name="Description" type="string"/>
 <Field __sourcePath="{}/Salesforce/Fax" containerType="SINGLE" label="Fax" name="Fax" type="string"/>
 <Field __sourcePath="{}/Salesforce/Industry" containerType="SINGLE" label="Industry" name="Industry" type="string"/>
-<Field __sourcePath="{}/Salesforce/LastModifiedDate" containerType="SINGLE" label="LastModifiedDate" name="LastModifiedDate" type="string"/>
 <Field __sourcePath="{}/Salesforce/Name" containerType="SINGLE" label="Name" name="Name" type="string"/>
 <Field __sourcePath="{}/Salesforce/NumberOfEmployees" containerType="SINGLE" label="NumberOfEmployees" name="NumberOfEmployees" type="string"/>
 <Field __sourcePath="{}/Salesforce/Ownership" containerType="SINGLE" label="Ownership" name="Ownership" type="string"/>
@@ -29,6 +28,7 @@
 <Field __sourcePath="{}/Salesforce/TickerSymbol" containerType="SINGLE" label="TickerSymbol" name="TickerSymbol" type="string"/>
 <Field __sourcePath="{}/Salesforce/Type" containerType="SINGLE" label="Type" name="Type" type="string"/>
 <Field __sourcePath="{}/Salesforce/Website" containerType="SINGLE" label="Website" name="Website" type="string"/>
+<Field __sourcePath="{}/Salesforce/LastModifiedDate" containerType="SINGLE" label="LastModifiedDate" name="LastModifiedDate" type="string"/>
 </Record>
 </Metadata>
 <Metadata __index="0" __referenceCounter="1" __sourcePath="{}/Siebel" _dataStructure="OBJECT" _id="__id" _type="Input" id="5e212233-1745-4e07-8683-8c0c99a0e2cc">
@@ -45,7 +45,6 @@
 <Field __sourcePath="{}/Siebel/Description" containerType="SINGLE" label="Description" name="Description" type="string"/>
 <Field __sourcePath="{}/Siebel/Fax_x0020Number" containerType="SINGLE" label="Fax Number" name="Fax_Number" type="string"/>
 <Field __sourcePath="{}/Siebel/Industry" containerType="SINGLE" label="Industry" name="Industry" type="string"/>
-<Field __sourcePath="{}/Siebel/Account_x0020Updated" containerType="SINGLE" label="Account Updated" name="Last_Modified" type="string"/>
 <Field __sourcePath="{}/Siebel/Name" containerType="SINGLE" label="Name" name="Name" type="string"/>
 <Field __sourcePath="{}/Siebel/Employees" containerType="SINGLE" label="Employees" name="Employees" type="string"/>
 <Field __sourcePath="{}/Siebel/Ownership_x0020Type" containerType="SINGLE" label="Ownership Type" name="Ownership_Type" type="string"/>
@@ -60,6 +59,7 @@
 <Field __sourcePath="{}/Siebel/Ticker" containerType="SINGLE" label="Ticker" name="Ticker" type="string"/>
 <Field __sourcePath="{}/Siebel/Type" containerType="SINGLE" label="Type" name="Type" type="string"/>
 <Field __sourcePath="{}/Siebel/Home_x0020Page" containerType="SINGLE" label="Home Page" name="Home_Page" type="string"/>
+<Field __sourcePath="{}/Siebel/Last_x0020Update_x0020-_x0020SDQ" containerType="SINGLE" label="Last Update - SDQ" name="Last_Update_SDQ" type="string"/>
 </Record>
 </Metadata>
 <Dictionary>
@@ -82,7 +82,6 @@
   <Mapping cloverField="Description" trim="true" xpath="Description"/>
   <Mapping cloverField="Fax_Number" trim="true" xpath="Fax_x0020Number"/>
   <Mapping cloverField="Industry" trim="true" xpath="Industry"/>
-  <Mapping cloverField="Last_Modified" trim="true" xpath="Account_x0020Updated"/>
   <Mapping cloverField="Name" trim="true" xpath="Name"/>
   <Mapping cloverField="Employees" trim="true" xpath="Employees"/>
   <Mapping cloverField="Ownership_Type" trim="true" xpath="Ownership_x0020Type"/>
@@ -97,6 +96,7 @@
   <Mapping cloverField="Ticker" trim="true" xpath="Ticker"/>
   <Mapping cloverField="Type" trim="true" xpath="Type"/>
   <Mapping cloverField="Home_Page" trim="true" xpath="Home_x0020Page"/>
+  <Mapping cloverField="Last_Update_SDQ" trim="true" xpath="Last_x0020Update_x0020-_x0020SDQ"/>
 </Context>
 ]]></attr>
 <attr name="_data_format"><![CDATA[MAP]]></attr>
@@ -117,7 +117,6 @@ output.BillingStreet = input.Bill_To_Street_Address;
 output.Fax = input.Fax_Number;
 output.Description = input.Description;
 output.Industry = input.Industry;
-output.LastModifiedDate = input.Last_Modified;
 output.Name = input.Name;
 output.NumberOfEmployees = input.Employees;
 output.Ownership = input.Ownership_Type;
@@ -131,7 +130,8 @@ output.ShippingStreet = input.Ship_To_Street_Address;
 output.Sic = input.SIC_Code;
 output.TickerSymbol = input.Ticker;
 output.Type = input.Type;
-output.Website = input.Home_Page;]]></attr>
+output.Website = input.Home_Page;
+output.LastModifiedDate = input.Last_Update_SDQ;]]></attr>
 </Node>
 <Node cacheInMemory="true" enabled="enabled" fileURL="dict:outputPayload" guiName="Map&lt;k,v&gt; WRITER" guiX="900" guiY="20" id="MAP_WRITER0" type="MAP_WRITER">
 <attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -147,7 +147,6 @@ output.Website = input.Home_Page;]]></attr>
   <Description>$0.Description</Description>
   <Fax>$0.Fax</Fax>
   <Industry>$0.Industry</Industry>
-  <LastModifiedDate>$0.LastModifiedDate</LastModifiedDate>
   <Name>$0.Name</Name>
   <NumberOfEmployees>$0.NumberOfEmployees</NumberOfEmployees>
   <Ownership>$0.Ownership</Ownership>
@@ -162,6 +161,7 @@ output.Website = input.Home_Page;]]></attr>
   <TickerSymbol>$0.TickerSymbol</TickerSymbol>
   <Type>$0.Type</Type>
   <Website>$0.Website</Website>
+  <LastModifiedDate>$0.LastModifiedDate</LastModifiedDate>
 </Salesforce>]]></attr>
 <attr name="_data_format"><![CDATA[MAP]]></attr>
 </Node>

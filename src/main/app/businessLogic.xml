@@ -45,7 +45,7 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
                 	<siebel:fields-to-retrieve>Description</siebel:fields-to-retrieve>
                 	<siebel:fields-to-retrieve>Fax Number</siebel:fields-to-retrieve>
                 	<siebel:fields-to-retrieve>Industry</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Account Updated</siebel:fields-to-retrieve>
+                	<siebel:fields-to-retrieve>Last Update - SDQ</siebel:fields-to-retrieve>
                 	<siebel:fields-to-retrieve>Name</siebel:fields-to-retrieve>
                 	<siebel:fields-to-retrieve>Employees</siebel:fields-to-retrieve>
                 	<siebel:fields-to-retrieve>Ownership Type</siebel:fields-to-retrieve>
