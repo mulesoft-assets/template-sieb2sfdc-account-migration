@@ -222,9 +222,7 @@ public class BusinessLogicIT extends FunctionalTestCase {
 	private void deleteTestAccountsFromSiebel(List<Map<String, Object>> createdAccountsInSiebel) throws Exception {
 		SubflowInterceptingChainLifecycleWrapper deleteAccountFromSiebelFlow = getSubFlow("deleteAccountsFromSiebelFlow");
 		deleteAccountFromSiebelFlow.initialise();
-		System.out.println("CAIS: " + createdAccountsInSiebel);
-		MuleEvent result = deleteTestEntityFromSandBox(deleteAccountFromSiebelFlow, createdAccountsInSiebel);
-		System.out.println("DR:" + result.getMessage().getPayload());
+		deleteTestEntityFromSandBox(deleteAccountFromSiebelFlow, createdAccountsInSiebel);
 	}
 
 	private void deleteTestAccountsFromSalesforce(List<Map<String, Object>> createdAccountsInA) throws Exception {
@@ -245,7 +243,6 @@ public class BusinessLogicIT extends FunctionalTestCase {
 		for (Map<String, Object> c : entitities) {
 			idList.add(c.get(KEY_ID).toString());
 		}
-		System.out.println("IDS: " + idList);
 		return deleteFlow.process(getTestEvent(idList, MessageExchangePattern.REQUEST_RESPONSE));
 	}
 
