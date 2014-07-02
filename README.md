@@ -146,6 +146,7 @@ In order to use this Mule Anypoint Template you need to configure properties (Cr
 + sieb.serverName `SBA_82`
 + sieb.objectManager `EAIObjMgr_enu`
 + sieb.port `2321`
++ sieb.timeOffset=`-7`
 
 #### SalesForce Connector configuration
 + sfdc.username `joan.baez@org`

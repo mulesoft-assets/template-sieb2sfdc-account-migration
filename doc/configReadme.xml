@@ -51,6 +51,7 @@ Once your app is all set and started, supposing you choose as domain name `sieb2
 + sieb.serverName `SBA_82`
 + sieb.objectManager `EAIObjMgr_enu`
 + sieb.port `2321`
++ sieb.timeOffset=`-7`
 
 #### SalesForce Connector configuration
 + sfdc.username `joan.baez@org`
