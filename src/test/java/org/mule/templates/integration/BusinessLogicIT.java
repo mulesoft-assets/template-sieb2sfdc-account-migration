@@ -68,7 +68,6 @@ public class BusinessLogicIT extends FunctionalTestCase {
 	@Before
 	public void setUp() throws Exception {
 		helper = new BatchTestHelper(muleContext);
-	
 		// Flow to retrieve accounts from target system after sync in g
 		retrieveAccountFromSalesforceFlow = getSubFlow("retrieveAccountFromSalesforceFlow");
 		retrieveAccountFromSalesforceFlow.initialise();
