@@ -83,6 +83,10 @@ In order to make the siebel connector work smoothly you have to provide the corr
 
 
 
+
+
+
+
 # Run it! <a name="runit"/>
 Simple steps to get Siebel to Salesforce Account Migration running.
 **Note:** This particular Anypoint Template illustrate the migration use case between Oracle Siebel Business Objects and a Database, thus it requires a Oracle Siebel Business Objects instance to work.
@@ -97,7 +101,7 @@ In any of the ways you would like to run this Template this is an example of the
 </pre>
 
 ## Running on premise <a name="runonopremise"/>
-In this section we detail the way you have to run you Anypoint Temple on you computer.
+In this section we detail the way you should run your Anypoint Template on your computer.
 
 
 ### Where to Download Mule Studio and Mule ESB
@@ -129,7 +133,7 @@ Once you have imported you Anypoint Template into Anypoint Studio you need to fo
 
 
 ### Running on Mule ESB stand alone <a name="runonmuleesbstandalone"/>
-Complete all properties in one of the property files, for example in [mule.prod.properties] (../blob/master/src/main/resources/mule.prod.properties) and run your app with the corresponding environment variable to use it. To follow the example, this will be `mule.env=prod`. 
+Complete all properties in one of the property files, for example in [mule.prod.properties] (../master/src/main/resources/mule.prod.properties) and run your app with the corresponding environment variable to use it. To follow the example, this will be `mule.env=prod`. 
 
 
 ## Running on CloudHub <a name="runoncloudhub"/>
@@ -158,7 +162,7 @@ In order to use this Mule Anypoint Template you need to configure properties (Cr
 + sfdc.username `joan.baez@org`
 + sfdc.password `JoanBaez456`
 + sfdc.securityToken `ces56arl7apQs56XTddf34X`
-+ sfdc.url `https://login.salesforce.com/services/Soap/u/26.0`
++ sfdc.url `https://login.salesforce.com/services/Soap/u/32.0`
 
 #### E-Mail Details
 + mail.from `batch.migrateaccounts.migration%40mulesoft.com`
@@ -174,7 +178,7 @@ Being ***X*** the number of Accounts to be synchronized on each run.
 
 The division by ***200*** is because, by default, Accounts are gathered in groups of 200 for each Upsert API Call in the commit step. 
 
-For instance if 10 records are fetched from origin instance, then 20 api calls will be made (10 + 10).
+For instance if 10 records are fetched from origin instance, then 11 api calls to Salesforce will be made (10 + 1).
 
 
 # Customize It!<a name="customizeit"/>
@@ -198,26 +202,26 @@ In the visual editor they can be found on the *Global Element* tab.
 
 ## businessLogic.xml<a name="businesslogicxml"/>
 This file holds the functional aspect of the Anypoint Template, directed by one flow responsible of conducting the business logic.
-For the purpose of this particular Template the *mainFlow* just executes a [Batch Job](http://www.mulesoft.org/documentation/display/current/Batch+Processing). which handles all the logic of it.
+For the purpose of this particular Template the *mainFlow* just executes a [Batch Job](http://www.mulesoft.org/documentation/display/current/Batch+Processing) which handles all its logic.
 This flow has Exception Strategy that basically consists on invoking the *defaultChoiseExceptionStrategy* defined in *errorHandling.xml* file.
 
 
 
 ## endpoints.xml<a name="endpointsxml"/>
-This is the file where you will found the inbound and outbound sides of your integration app.
-This Template has only an [HTTP Inbound Endpoint](http://www.mulesoft.org/documentation/display/current/HTTP+Endpoint+Reference) as the way to trigger the use case.
+This is the file where you can find the inbound and outbound sides of your integration app.
+This Template has only a [HTTP Connector](http://www.mulesoft.org/documentation/display/current/HTTP+Connector) as the way to trigger the use case.
 
 ### Inbound Flow
-**HTTP Inbound Endpoint** - Start Report Generation
+**HTTP Connector** - Start Report Generation
 + `${http.port}` is set as a property to be defined either on a property file or in CloudHub environment variables.
 + The path configured by default is `migrateaccounts` and you are free to change for the one you prefer.
 + The host name for all endpoints in your CloudHub configuration should be defined as `localhost`. CloudHub will then route requests from your application domain URL to the endpoint.
-+ The endpoint is configured as a *request-response* since as a result of calling it the response will be the total of Accounts synced and filtered by the criteria specified.
 
 
 
 ## errorHandling.xml<a name="errorhandlingxml"/>
-Contains a [Catch Exception Strategy](http://www.mulesoft.org/documentation/display/current/Catch+Exception+Strategy) that is only Logging the exception thrown (If so). As you imagine, this is the right place to handle how your integration will react depending on the different exceptions.
+This is the right place to handle how your integration will react depending on the different exceptions. 
+This file holds a [Choice Exception Strategy](http://www.mulesoft.org/documentation/display/current/Choice+Exception+Strategy) that is referenced by the main flow in the business logic.
 
 
 

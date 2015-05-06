@@ -1,42 +1,55 @@
 
 
-<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" xmlns:siebel="http://www.mulesoft.org/schema/mule/siebel" xmlns:db="http://www.mulesoft.org/schema/mule/db"
-	xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.5.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
-http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" 
+xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" 
+xmlns:siebel="http://www.mulesoft.org/schema/mule/siebel" 
+xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" 
+xmlns="http://www.mulesoft.org/schema/mule/core" 
+xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" 
+xmlns:spring="http://www.springframework.org/schema/beans" 
+version="EE-3.6.1" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
-http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
 http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/siebel/current/mule-siebel.xsd
 http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
     <data-mapper:config name="salesforce_to_siebel" transformationGraphPath="salesforce_to_siebel.grf" doc:name="salesforce_to_siebel"/>
-    <flow name="createAccountsInSiebelFlow" doc:name="createAccountsInSiebelFlow">
+    <flow name="createAccountsInSiebelFlow" >
+
         <collection-splitter doc:name="Collection Splitter"/>
         <processor-chain doc:name="Processor Chain">
+            <logger message="Account to insert to Siebel: #[payload]" level="INFO" doc:name="Logger"/>
             <data-mapper:transform config-ref="salesforce_to_siebel" doc:name="Salesforce to Siebel"/>
             <siebel:create-business-component config-ref="Oracle_Siebel_Business_Objects" businessObjectComponentType="Account.Account" doc:name="Oracle Siebel Business Objects">
                 <siebel:business-component-fields ref="#[payload]"/>
             </siebel:create-business-component>
+            <logger message="Create Account in Siebel result: #[payload]" level="INFO" doc:name="Logger"/>
         </processor-chain>
         <collection-aggregator failOnTimeout="true" doc:name="Collection Aggregator"/>
     </flow>
     
-    <sub-flow name="createAccountsInSalesforceFlow" doc:name="createAccountsInSalesforceFlow">
+    <sub-flow name="createAccountsInSalesforceFlow" >
         <sfdc:create config-ref="Salesforce" type="Account" doc:name="Salesforce">
             <sfdc:objects ref="#[payload]"/>
         </sfdc:create>
+        <logger message="Create Account in Salesforce result: #[payload]" level="INFO" doc:name="Logger"/>
     </sub-flow>
-    <sub-flow name="retrieveAccountFromSalesforceFlow" doc:name="retrieveAccountFromSalesforceFlow">
-        <sfdc:query-single config-ref="Salesforce" query="SELECT Id,AccountNumber,AccountSource,AnnualRevenue,BillingCity,BillingCountry,BillingPostalCode,BillingState,BillingStreet,Description,Fax,Industry,LastModifiedDate,Name,NumberOfEmployees,OwnerId,Ownership,ParentId,Phone,Rating,ShippingCity,ShippingCountry,ShippingPostalCode,ShippingState,ShippingStreet,Sic,SicDesc,Site,TickerSymbol,Type,Website FROM Account WHERE Name = '#[payload[&quot;Name&quot;]]'" doc:name="Salesforce" />
+    <sub-flow name="retrieveAccountFromSalesforceFlow" >
+        <sfdc:query-single config-ref="Salesforce" query="SELECT Id,AccountNumber,AccountSource,AnnualRevenue,BillingCity,BillingCountry,BillingPostalCode,BillingState,BillingStreet,Description,Fax,Industry,LastModifiedDate,Name,NumberOfEmployees,OwnerId,Ownership,ParentId,Phone,Rating,ShippingCity,ShippingCountry,ShippingPostalCode,ShippingState,ShippingStreet,Sic,SicDesc,Site,TickerSymbol,Type,Website FROM Account WHERE Name = '#[payload['Name']]'" doc:name="Salesforce" />
+        <logger message="Account retrieved from SFDC: #[payload]" level="INFO" doc:name="Logger"/>
     </sub-flow>
-    <sub-flow name="deleteAccountsFromSiebelFlow" doc:name="deleteAccountsFromSiebelFlow">
+    <sub-flow name="deleteAccountsFromSiebelFlow" >
         <foreach doc:name="For Each">
             <siebel:delete-business-component config-ref="Oracle_Siebel_Business_Objects" businessComponentId="#[payload]" businessObjectComponentType="Account.Account" doc:name="Oracle Siebel Business Objects"/>
+            <logger message="Delete Account from Siebel result: #[payload]" level="INFO" doc:name="Logger"/>
         </foreach>
     </sub-flow>
-    <sub-flow name="deleteAccountsFromSalesforceFlow" doc:name="deleteAccountsFromSalesforceFlow">
+    <sub-flow name="deleteAccountsFromSalesforceFlow" >
         <sfdc:delete config-ref="Salesforce" doc:name="Salesforce">
             <sfdc:ids ref="#[payload]"/>
         </sfdc:delete>
+        <logger message="Delete SFDC Account result: #[payload]" level="INFO" doc:name="Logger"/>
     </sub-flow>
 </mule>

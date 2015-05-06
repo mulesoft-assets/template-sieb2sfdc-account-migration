@@ -4,17 +4,17 @@
 	<parent>
 		<groupId>org.mule.templates</groupId>
 		<artifactId>templates-tooling-parent-pom</artifactId>
-		<version>1.0.7</version>
+		<version>1.1.6</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>template-sieb2sfdc-account-migration</artifactId>
 	<packaging>mule</packaging>
-	<version>1.1.0-SNAPSHOT</version>
+	<version>1.1.1-SNAPSHOT</version>
 	<name>template-sieb2sfdc-account-migration Anypoint Template Project</name>
 
 	<properties>
-		<siebel.version>2.0.0</siebel.version>
+		<sieb.version>2.1.0</sieb.version>
 	</properties>
 
 	<scm>
@@ -56,7 +56,7 @@
 		<dependency>
 			<groupId>org.mule.modules</groupId>
 			<artifactId>mule-module-siebel</artifactId>
-			<version>${siebel.version}</version>
+			<version>${sieb.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>siebel</groupId>
@@ -73,6 +73,18 @@
 	<dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-spring-config</artifactId>
+            <version>${mule.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-http</artifactId>
+            <version>${mule.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    <dependency>
+            <groupId>com.mulesoft.muleesb.modules</groupId>
+            <artifactId>mule-module-batch-ee</artifactId>
             <version>${mule.version}</version>
             <scope>provided</scope>
         </dependency>

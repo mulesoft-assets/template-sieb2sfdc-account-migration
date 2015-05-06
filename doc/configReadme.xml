@@ -62,7 +62,7 @@ Once your app is all set and started, supposing you choose as domain name `sieb2
 + sfdc.username `joan.baez@org`
 + sfdc.password `JoanBaez456`
 + sfdc.securityToken `ces56arl7apQs56XTddf34X`
-+ sfdc.url `https://login.salesforce.com/services/Soap/u/26.0`
++ sfdc.url `https://login.salesforce.com/services/Soap/u/32.0`
 
 #### E-Mail Details
 + mail.from `batch.migrateaccounts.migration%40mulesoft.com`
@@ -80,26 +80,25 @@ Being ***X*** the number of Accounts to be synchronized on each run.
 
 The division by ***200*** is because, by default, Accounts are gathered in groups of 200 for each Upsert API Call in the commit step. 
 
-For instance if 10 records are fetched from origin instance, then 20 api calls will be made (10 + 10).
+For instance if 10 records are fetched from origin instance, then 11 api calls to Salesforce will be made (10 + 1).
 ]]>
 		</section>
 		<section id="default_endpoints_xml">
 		<![CDATA[
-This is the file where you will found the inbound and outbound sides of your integration app.
-This Template has only an [HTTP Inbound Endpoint](http://www.mulesoft.org/documentation/display/current/HTTP+Endpoint+Reference) as the way to trigger the use case.
+This is the file where you can find the inbound and outbound sides of your integration app.
+This Template has only a [HTTP Connector](http://www.mulesoft.org/documentation/display/current/HTTP+Connector) as the way to trigger the use case.
 
 $H$H# Inbound Flow
-**HTTP Inbound Endpoint** - Start Report Generation
+**HTTP Connector** - Start Report Generation
 + `${http.port}` is set as a property to be defined either on a property file or in CloudHub environment variables.
 + The path configured by default is `migrateaccounts` and you are free to change for the one you prefer.
 + The host name for all endpoints in your CloudHub configuration should be defined as `localhost`. CloudHub will then route requests from your application domain URL to the endpoint.
-+ The endpoint is configured as a *request-response* since as a result of calling it the response will be the total of Accounts synced and filtered by the criteria specified.
 ]]>
 		</section>
 		<section id="default_business_logic_xml">
 		<![CDATA[
 This file holds the functional aspect of the Anypoint Template, directed by one flow responsible of conducting the business logic.
-For the purpose of this particular Template the *mainFlow* just executes a [Batch Job](http://www.mulesoft.org/documentation/display/current/Batch+Processing). which handles all the logic of it.
+For the purpose of this particular Template the *mainFlow* just executes a [Batch Job](http://www.mulesoft.org/documentation/display/current/Batch+Processing) which handles all its logic.
 This flow has Exception Strategy that basically consists on invoking the *defaultChoiseExceptionStrategy* defined in *errorHandling.xml* file.
 ]]>
 		</section>
