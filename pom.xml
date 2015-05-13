@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.mule.templates</groupId>
 		<artifactId>templates-tooling-parent-pom</artifactId>
-		<version>1.1.6</version>
+		<version>1.1.9</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -12,10 +12,6 @@
 	<packaging>mule</packaging>
 	<version>1.1.1-SNAPSHOT</version>
 	<name>template-sieb2sfdc-account-migration Anypoint Template Project</name>
-
-	<properties>
-		<sieb.version>2.1.0</sieb.version>
-	</properties>
 
 	<scm>
 		<connection>scm:git:https://github.com/mulesoft/template-sieb2sfdc-account-migration.git</connection>
