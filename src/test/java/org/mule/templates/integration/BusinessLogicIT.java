@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,6 +41,7 @@ import com.mulesoft.module.batch.BatchTestHelper;
  */
 public class BusinessLogicIT extends AbstractTemplatesTestCase {
 
+	private static final Logger log = LogManager.getLogger(BusinessLogicIT.class);
 	private static final String KEY_ID = "Id";
 	private static final String KEY_NAME = "Name";
 	private static final String KEY_WEBSITE = "Website";
@@ -156,7 +159,7 @@ public class BusinessLogicIT extends AbstractTemplatesTestCase {
 			createdAccountsInSiebel.get(i).put(KEY_ID, ((CreateResult) results.get(i)).getCreatedObjects().get(0));
 		}
 
-		System.out.println("Results after adding: " + createdAccountsInSiebel.toString());
+		log.info("Results after adding: " + createdAccountsInSiebel.toString());
 	}
 
 	private void deleteTestAccountsFromSiebel(List<Map<String, Object>> createdAccountsInSiebel) throws Exception {
