@@ -48,6 +48,7 @@ Once your app is all set and started, supposing you choose as domain name `sieb2
 		<section id="application_configuration">
 		<![CDATA[
 + http.port `9090` 
++ page.size `200`
 
 #### Oracle Siebel Business Objects Connector configuration
 + sieb.user `SADMIN`
