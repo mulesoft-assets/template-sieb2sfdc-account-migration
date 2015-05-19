@@ -21,8 +21,8 @@ http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfd
 http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/siebel/current/mule-siebel.xsd
 http://www.mulesoft.org/schema/mule/smtp http://www.mulesoft.org/schema/mule/smtp/current/mule-smtp.xsd
 http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd">
+    <data-mapper:config name="Siebel_Account_to_Salesforce_Account" transformationGraphPath="siebel_account_to_salesforce_account.grf" doc:name="Siebel_Account_to_Salesforce_Account"/>
 
-    <data-mapper:config name="map_to_map" transformationGraphPath="map_to_map.grf" doc:name="map_to_map"/>
 
 
     <batch:job name="migrateAccountsBatch">
@@ -31,39 +31,42 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
             <siebel:query-business-components config-ref="Oracle_Siebel_Business_Objects" businessObjectComponentType="Account.Account" doc:name="query Accounts from Siebel"
             	searchExpression="[Employees] &gt; 70000">
                 <siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Account Number</siebel:fields-to-retrieve> <!--  AccountNumber -->
-                	<siebel:fields-to-retrieve>Annual Revenue</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Source</siebel:fields-to-retrieve> <!-- Account Source -->
-                	<siebel:fields-to-retrieve>Bill To City</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Bill To Country</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Bill To Postal Code</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Bill To State</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Bill To Street Address</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Description</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Fax Number</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Industry</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Last Update - SDQ</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Name</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Employees</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Ownership Type</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Parent Account Id</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Phone Number</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Rate</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Ship To City</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Ship To Country</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Ship To Postal Code</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Ship To State</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Ship To Street Address</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>SIC Code</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Ticker</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Type</siebel:fields-to-retrieve>
-                	<siebel:fields-to-retrieve>Home Page</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Account Number</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Annual Revenue</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Source</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Bill To City</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Bill To Country</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Bill To Postal Code</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Bill To State</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Bill To Street Address</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Description</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Fax Number</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Industry</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Last Update - SDQ</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Name</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Employees</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Ownership Type</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Parent Account Id</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Main Phone Number</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Rate</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Ship To City</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Ship To Country</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Ship To Postal Code</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Ship To State</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Ship To Street Address</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>SIC Code</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Ticker</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Type</siebel:fields-to-retrieve>
+                    <siebel:fields-to-retrieve>Home Page</siebel:fields-to-retrieve>
+ <!--  AccountNumber -->
+ <!-- Account Source -->
+
                 </siebel:fields-to-retrieve>
             </siebel:query-business-components>
         </batch:input> 
         <batch:process-records>
             <batch:step name="transformFieldsFromSiebelToSalesforceStep">
-                <data-mapper:transform config-ref="map_to_map" doc:name="Map To Map"/>
+                <data-mapper:transform config-ref="Siebel_Account_to_Salesforce_Account" doc:name="Siebel Account to Salesforce Account"/>
                 <logger message="Current Account: #[payload]" level="INFO" doc:name="Logger"/>
             </batch:step>
             <batch:step name="getAccountFromSalesforceStep">

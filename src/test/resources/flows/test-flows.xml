@@ -1,27 +1,28 @@
 
 
 <mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" 
-xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" 
-xmlns:siebel="http://www.mulesoft.org/schema/mule/siebel" 
-xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" 
-xmlns="http://www.mulesoft.org/schema/mule/core" 
-xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" 
-xmlns:spring="http://www.springframework.org/schema/beans" 
-version="EE-3.6.2" 
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+	xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" 
+	xmlns:siebel="http://www.mulesoft.org/schema/mule/siebel" 
+	xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" 
+	xmlns="http://www.mulesoft.org/schema/mule/core" 
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" 
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	version="EE-3.6.2" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
 http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/siebel/current/mule-siebel.xsd
 http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
-    <data-mapper:config name="salesforce_to_siebel" transformationGraphPath="salesforce_to_siebel.grf" doc:name="salesforce_to_siebel"/>
+    <data-mapper:config name="Salesforce_account_to_Siebel_account" transformationGraphPath="salesforce_account_to_siebel_account.grf" doc:name="Salesforce_account_to_Siebel_account"/>
+
     <flow name="createAccountsInSiebelFlow" >
 
         <collection-splitter doc:name="Collection Splitter"/>
         <processor-chain doc:name="Processor Chain">
-            <logger message="Account to insert to Siebel: #[payload]" level="INFO" doc:name="Logger"/>
-            <data-mapper:transform config-ref="salesforce_to_siebel" doc:name="Salesforce to Siebel"/>
+            <data-mapper:transform config-ref="Salesforce_account_to_Siebel_account" doc:name="Map To Map"/>
+            <logger message="Siebel data to create account: #[payload]" level="INFO" doc:name="Logger"/>
             <siebel:create-business-component config-ref="Oracle_Siebel_Business_Objects" businessObjectComponentType="Account.Account" doc:name="Oracle Siebel Business Objects">
                 <siebel:business-component-fields ref="#[payload]"/>
             </siebel:create-business-component>

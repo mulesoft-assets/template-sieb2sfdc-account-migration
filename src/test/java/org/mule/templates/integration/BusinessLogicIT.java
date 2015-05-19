@@ -75,7 +75,6 @@ public class BusinessLogicIT extends AbstractTemplatesTestCase {
 		deleteTestAccountsFromSalesforce(createdAccountsInSiebel);
 	}
 
-//	@Ignore
 	@Test
 	public void testMainFlow() throws Exception {
 		runFlow("mainFlow");
@@ -86,9 +85,15 @@ public class BusinessLogicIT extends AbstractTemplatesTestCase {
 	
 		Map<String, Object> payload0 = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, createdAccountsInSiebel.get(0));
 		Assert.assertNotNull("The account 0 should have been sync but is null", payload0);
-
+		Assert.assertEquals("The account 0 should have been sync (Website)", createdAccountsInSiebel.get(0).get(KEY_WEBSITE), payload0.get(KEY_WEBSITE));
+		Assert.assertEquals("The account 0 should have been sync (Number of Employees)", createdAccountsInSiebel.get(0).get(KEY_NUMBER_OF_EMPLOYEES).toString(), payload0.get(KEY_NUMBER_OF_EMPLOYEES).toString());
+		Assert.assertEquals("The account 0 should have been sync (Phone)", createdAccountsInSiebel.get(0).get(KEY_PHONE), payload0.get(KEY_PHONE));
+		
 		Map<String, Object>  payload1 = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, createdAccountsInSiebel.get(1));
 		Assert.assertNotNull("The account 1 should have been sync but is null", payload1);
+		Assert.assertEquals("The account 1 should have been sync (Website)", createdAccountsInSiebel.get(1).get(KEY_WEBSITE), payload1.get(KEY_WEBSITE));
+		Assert.assertEquals("The account 1 should have been sync (Number of Employees)", createdAccountsInSiebel.get(1).get(KEY_NUMBER_OF_EMPLOYEES).toString(), payload1.get(KEY_NUMBER_OF_EMPLOYEES).toString());
+		Assert.assertEquals("The account 1 should have been sync (Phone)", createdAccountsInSiebel.get(1).get(KEY_PHONE), payload1.get(KEY_PHONE));
 		
 		Map<String, Object>  payload2 = invokeRetrieveFlow(retrieveAccountFromSalesforceFlow, createdAccountsInSiebel.get(2));
 		Assert.assertNull("The account 2 should have not been sync", payload2);
@@ -105,6 +110,7 @@ public class BusinessLogicIT extends AbstractTemplatesTestCase {
 		sfdcAccountToBeUpdated.put(KEY_NAME, "Test_AccToUpdate" + uniqueSuffix);
 		sfdcAccountToBeUpdated.put(KEY_WEBSITE, "http://example.com");
 		sfdcAccountToBeUpdated.put(KEY_PHONE, "112");
+		sfdcAccountToBeUpdated.put(KEY_NUMBER_OF_EMPLOYEES, 72000);
 		List<Map<String, Object>> createdAccountInSalesforce = new ArrayList<Map<String, Object>>();
 		createdAccountInSalesforce.add(sfdcAccountToBeUpdated);
 	

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><Graph __version="3.5.0" author="Admin" created="Tue May 19 09:13:56 CEST 2015" description="Siebel Account to Salesforce Account" guiVersion="3.4.4.P" id="1432022495915" licenseCode="Unlicensed" licenseType="Unknown" modified="Tue May 19 09:13:56 CEST 2015" modifiedBy="Admin" name="Siebel_Account_to_Salesforce_Account" revision="1.0" showComponentDetails="false">
+<Global>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/Salesforce_x0020Account" _dataStructure="OBJECT" _id="__id" _type="Output" id="c7d3d8df-4892-46cb-9e79-50128044845e">
+<Record fieldDelimiter="," name="Salesforce_Account" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/Salesforce_x0020Account/AccountNumber" containerType="SINGLE" label="AccountNumber" name="AccountNumber" type="string"/>
+<Field __index="2" __sourcePath="{}/Salesforce_x0020Account/AccountSource" containerType="SINGLE" label="AccountSource" name="AccountSource" type="string"/>
+<Field __index="1" __sourcePath="{}/Salesforce_x0020Account/AnnualRevenue" containerType="SINGLE" label="AnnualRevenue" name="AnnualRevenue" type="string"/>
+<Field __index="3" __sourcePath="{}/Salesforce_x0020Account/BillingCity" containerType="SINGLE" label="BillingCity" name="BillingCity" type="string"/>
+<Field __index="4" __sourcePath="{}/Salesforce_x0020Account/BillingCountry" containerType="SINGLE" label="BillingCountry" name="BillingCountry" type="string"/>
+<Field __index="5" __sourcePath="{}/Salesforce_x0020Account/BillingPostalCode" containerType="SINGLE" label="BillingPostalCode" name="BillingPostalCode" type="string"/>
+<Field __index="6" __sourcePath="{}/Salesforce_x0020Account/BillingState" containerType="SINGLE" label="BillingState" name="BillingState" type="string"/>
+<Field __index="7" __sourcePath="{}/Salesforce_x0020Account/BillingStreet" containerType="SINGLE" label="BillingStreet" name="BillingStreet" type="string"/>
+<Field __index="8" __sourcePath="{}/Salesforce_x0020Account/Description" containerType="SINGLE" label="Description" name="Description" type="string"/>
+<Field __index="9" __sourcePath="{}/Salesforce_x0020Account/Fax" containerType="SINGLE" label="Fax" name="Fax" type="string"/>
+<Field __index="10" __sourcePath="{}/Salesforce_x0020Account/Industry" containerType="SINGLE" label="Industry" name="Industry" type="string"/>
+<Field __index="25" __sourcePath="{}/Salesforce_x0020Account/LastModifiedDate" containerType="SINGLE" label="LastModifiedDate" name="LastModifiedDate" type="string"/>
+<Field __index="11" __sourcePath="{}/Salesforce_x0020Account/Name" containerType="SINGLE" label="Name" name="Name" type="string"/>
+<Field __index="12" __sourcePath="{}/Salesforce_x0020Account/NumberOfEmployees" containerType="SINGLE" label="NumberOfEmployees" name="NumberOfEmployees" type="string"/>
+<Field __index="13" __sourcePath="{}/Salesforce_x0020Account/Ownership" containerType="SINGLE" label="Ownership" name="Ownership" type="string"/>
+<Field __index="14" __sourcePath="{}/Salesforce_x0020Account/Phone" containerType="SINGLE" label="Phone" name="Phone" type="string"/>
+<Field __index="15" __sourcePath="{}/Salesforce_x0020Account/Rating" containerType="SINGLE" label="Rating" name="Rating" type="string"/>
+<Field __index="16" __sourcePath="{}/Salesforce_x0020Account/ShippingCity" containerType="SINGLE" label="ShippingCity" name="ShippingCity" type="string"/>
+<Field __index="17" __sourcePath="{}/Salesforce_x0020Account/ShippingCountry" containerType="SINGLE" label="ShippingCountry" name="ShippingCountry" type="string"/>
+<Field __index="18" __sourcePath="{}/Salesforce_x0020Account/ShippingPostalCode" containerType="SINGLE" label="ShippingPostalCode" name="ShippingPostalCode" type="string"/>
+<Field __index="19" __sourcePath="{}/Salesforce_x0020Account/ShippingState" containerType="SINGLE" label="ShippingState" name="ShippingState" type="string"/>
+<Field __index="20" __sourcePath="{}/Salesforce_x0020Account/ShippingStreet" containerType="SINGLE" label="ShippingStreet" name="ShippingStreet" type="string"/>
+<Field __index="21" __sourcePath="{}/Salesforce_x0020Account/Sic" containerType="SINGLE" label="Sic" name="Sic" type="string"/>
+<Field __index="22" __sourcePath="{}/Salesforce_x0020Account/TickerSymbol" containerType="SINGLE" label="TickerSymbol" name="TickerSymbol" type="string"/>
+<Field __index="23" __sourcePath="{}/Salesforce_x0020Account/Type" containerType="SINGLE" label="Type" name="Type" type="string"/>
+<Field __index="24" __sourcePath="{}/Salesforce_x0020Account/Website" containerType="SINGLE" label="Website" name="Website" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/Siebel_x0020Account" _dataStructure="OBJECT" _id="__id" _type="Input" id="d98207c4-f0a9-434e-8880-3fa9275156ca">
+<Record fieldDelimiter="," name="Siebel_Account" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/Siebel_x0020Account/Account_x0020Number" containerType="SINGLE" label="Account Number" name="Account_Number" type="string"/>
+<Field __index="1" __sourcePath="{}/Siebel_x0020Account/Annual_x0020Revenue" containerType="SINGLE" label="Annual Revenue" name="Annual_Revenue" type="string"/>
+<Field __index="3" __sourcePath="{}/Siebel_x0020Account/Bill_x0020To_x0020City" containerType="SINGLE" label="Bill To City" name="Bill_To_City" type="string"/>
+<Field __index="4" __sourcePath="{}/Siebel_x0020Account/Bill_x0020To_x0020Country" containerType="SINGLE" label="Bill To Country" name="Bill_To_Country" type="string"/>
+<Field __index="5" __sourcePath="{}/Siebel_x0020Account/Bill_x0020To_x0020Postal_x0020Code" containerType="SINGLE" label="Bill To Postal Code" name="Bill_To_Postal_Code" type="string"/>
+<Field __index="6" __sourcePath="{}/Siebel_x0020Account/Bill_x0020To_x0020State" containerType="SINGLE" label="Bill To State" name="Bill_To_State" type="string"/>
+<Field __index="7" __sourcePath="{}/Siebel_x0020Account/Bill_x0020To_x0020Street_x0020Address" containerType="SINGLE" label="Bill To Street Address" name="Bill_To_Street_Address" type="string"/>
+<Field __index="8" __sourcePath="{}/Siebel_x0020Account/Description" containerType="SINGLE" label="Description" name="Description" type="string"/>
+<Field __index="12" __sourcePath="{}/Siebel_x0020Account/Employees" containerType="SINGLE" label="Employees" name="Employees" type="string"/>
+<Field __index="9" __sourcePath="{}/Siebel_x0020Account/Fax_x0020Number" containerType="SINGLE" label="Fax Number" name="Fax_Number" type="string"/>
+<Field __index="24" __sourcePath="{}/Siebel_x0020Account/Home_x0020Page" containerType="SINGLE" label="Home Page" name="Home_Page" type="string"/>
+<Field __index="10" __sourcePath="{}/Siebel_x0020Account/Industry" containerType="SINGLE" label="Industry" name="Industry" type="string"/>
+<Field __index="25" __sourcePath="{}/Siebel_x0020Account/Last_x0020Update_x0020-_x0020SDQ" containerType="SINGLE" label="Last Update - SDQ" name="Last_Update_SDQ" type="string"/>
+<Field __index="14" __sourcePath="{}/Siebel_x0020Account/Main_x0020Phone_x0020Number" containerType="SINGLE" label="Main Phone Number" name="Main_Phone_Number" type="string"/>
+<Field __index="11" __sourcePath="{}/Siebel_x0020Account/Name" containerType="SINGLE" label="Name" name="Name" type="string"/>
+<Field __index="13" __sourcePath="{}/Siebel_x0020Account/Ownership_x0020Type" containerType="SINGLE" label="Ownership Type" name="Ownership_Type" type="string"/>
+<Field __index="15" __sourcePath="{}/Siebel_x0020Account/Rate" containerType="SINGLE" label="Rate" name="Rate" type="string"/>
+<Field __index="21" __sourcePath="{}/Siebel_x0020Account/SIC_x0020Code" containerType="SINGLE" label="SIC Code" name="SIC_Code" type="string"/>
+<Field __index="16" __sourcePath="{}/Siebel_x0020Account/Ship_x0020To_x0020City" containerType="SINGLE" label="Ship To City" name="Ship_To_City" type="string"/>
+<Field __index="17" __sourcePath="{}/Siebel_x0020Account/Ship_x0020To_x0020Country" containerType="SINGLE" label="Ship To Country" name="Ship_To_Country" type="string"/>
+<Field __index="18" __sourcePath="{}/Siebel_x0020Account/Ship_x0020To_x0020Postal_x0020Code" containerType="SINGLE" label="Ship To Postal Code" name="Ship_To_Postal_Code" type="string"/>
+<Field __index="19" __sourcePath="{}/Siebel_x0020Account/Ship_x0020To_x0020State" containerType="SINGLE" label="Ship To State" name="Ship_To_State" type="string"/>
+<Field __index="20" __sourcePath="{}/Siebel_x0020Account/Ship_x0020To_x0020Street_x0020Address" containerType="SINGLE" label="Ship To Street Address" name="Ship_To_Street_Address" type="string"/>
+<Field __index="2" __sourcePath="{}/Siebel_x0020Account/Source" containerType="SINGLE" label="Source" name="Source" type="string"/>
+<Field __index="22" __sourcePath="{}/Siebel_x0020Account/Ticker" containerType="SINGLE" label="Ticker" name="Ticker" type="string"/>
+<Field __index="23" __sourcePath="{}/Siebel_x0020Account/Type" containerType="SINGLE" label="Type" name="Type" type="string"/>
+</Record>
+</Metadata>
+<Dictionary>
+<Entry id="DictionaryEntry0" input="true" name="inputPayload" output="false" type="object"/>
+<Entry id="DictionaryEntry1" input="false" name="outputPayload" output="true" type="object"/>
+</Dictionary>
+</Global>
+<Phase number="0">
+<Node enabled="enabled" fileURL="dict:inputPayload" guiName="Map&lt;k,v&gt; READER" guiX="20" guiY="20" id="BEAN_READER0" type="BEAN_READER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Context outPort="0" sequenceField="__id" xpath=".">
+  <Mapping cloverField="Account_Number" trim="true" xpath="Account_x0020Number"/>
+  <Mapping cloverField="Annual_Revenue" trim="true" xpath="Annual_x0020Revenue"/>
+  <Mapping cloverField="Bill_To_City" trim="true" xpath="Bill_x0020To_x0020City"/>
+  <Mapping cloverField="Bill_To_Country" trim="true" xpath="Bill_x0020To_x0020Country"/>
+  <Mapping cloverField="Bill_To_Postal_Code" trim="true" xpath="Bill_x0020To_x0020Postal_x0020Code"/>
+  <Mapping cloverField="Bill_To_State" trim="true" xpath="Bill_x0020To_x0020State"/>
+  <Mapping cloverField="Bill_To_Street_Address" trim="true" xpath="Bill_x0020To_x0020Street_x0020Address"/>
+  <Mapping cloverField="Description" trim="true" xpath="Description"/>
+  <Mapping cloverField="Employees" trim="true" xpath="Employees"/>
+  <Mapping cloverField="Fax_Number" trim="true" xpath="Fax_x0020Number"/>
+  <Mapping cloverField="Home_Page" trim="true" xpath="Home_x0020Page"/>
+  <Mapping cloverField="Industry" trim="true" xpath="Industry"/>
+  <Mapping cloverField="Last_Update_SDQ" trim="true" xpath="Last_x0020Update_x0020-_x0020SDQ"/>
+  <Mapping cloverField="Main_Phone_Number" trim="true" xpath="Main_x0020Phone_x0020Number"/>
+  <Mapping cloverField="Name" trim="true" xpath="Name"/>
+  <Mapping cloverField="Ownership_Type" trim="true" xpath="Ownership_x0020Type"/>
+  <Mapping cloverField="Rate" trim="true" xpath="Rate"/>
+  <Mapping cloverField="SIC_Code" trim="true" xpath="SIC_x0020Code"/>
+  <Mapping cloverField="Ship_To_City" trim="true" xpath="Ship_x0020To_x0020City"/>
+  <Mapping cloverField="Ship_To_Country" trim="true" xpath="Ship_x0020To_x0020Country"/>
+  <Mapping cloverField="Ship_To_Postal_Code" trim="true" xpath="Ship_x0020To_x0020Postal_x0020Code"/>
+  <Mapping cloverField="Ship_To_State" trim="true" xpath="Ship_x0020To_x0020State"/>
+  <Mapping cloverField="Ship_To_Street_Address" trim="true" xpath="Ship_x0020To_x0020Street_x0020Address"/>
+  <Mapping cloverField="Source" trim="true" xpath="Source"/>
+  <Mapping cloverField="Ticker" trim="true" xpath="Ticker"/>
+  <Mapping cloverField="Type" trim="true" xpath="Type"/>
+</Context>
+]]></attr>
+<attr name="_data_format"><![CDATA[MAP]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'Siebel_Account' -&gt; 'Salesforce_Account'" guiX="460" guiY="20" id="FOREACH_SIEBEL_X0020ACCOUNT_SALESFORCE_X0020ACCOUNT" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+//END -> DO NOT REMOVE
+output.Description = input.Description;
+output.Industry = input.Industry;
+output.Name = input.Name;
+output.Type = input.Type;
+output.AccountNumber = input.Account_Number;
+output.BillingCity = input.Bill_To_City;
+output.BillingCountry = input.Bill_To_Country;
+output.BillingPostalCode = input.Bill_To_Postal_Code;
+output.BillingState = input.Bill_To_State;
+output.BillingStreet = input.Bill_To_Street_Address;
+output.NumberOfEmployees = input.Employees;
+output.Fax = input.Fax_Number;
+output.Website = input.Home_Page;
+output.LastModifiedDate = input.Last_Update_SDQ;
+output.Phone = input.Main_Phone_Number;
+output.Ownership = input.Ownership_Type;
+output.Rating = input.Rate;
+output.ShippingCity = input.Ship_To_City;
+output.ShippingCountry = input.Ship_To_Country;
+output.ShippingPostalCode = input.Ship_To_Postal_Code;
+output.ShippingState = input.Ship_To_State;
+output.ShippingStreet = input.Ship_To_Street_Address;
+output.TickerSymbol = input.Ticker;
+output.AccountSource = input.Source;
+output.AnnualRevenue = input.Annual_Revenue;
+output.Sic = input.SIC_Code;]]></attr>
+</Node>
+<Node cacheInMemory="true" enabled="enabled" fileURL="dict:outputPayload" guiName="Map&lt;k,v&gt; WRITER" guiX="900" guiY="20" id="MAP_WRITER0" type="MAP_WRITER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<clover:element clover:name="Salesforce Account" xmlns:clover="http://www.cloveretl.com/ns/xmlmapping" clover:inPort="0">
+  <AccountNumber>$0.AccountNumber</AccountNumber>
+  <AnnualRevenue>$0.AnnualRevenue</AnnualRevenue>
+  <AccountSource>$0.AccountSource</AccountSource>
+  <BillingCity>$0.BillingCity</BillingCity>
+  <BillingCountry>$0.BillingCountry</BillingCountry>
+  <BillingPostalCode>$0.BillingPostalCode</BillingPostalCode>
+  <BillingState>$0.BillingState</BillingState>
+  <BillingStreet>$0.BillingStreet</BillingStreet>
+  <Description>$0.Description</Description>
+  <Fax>$0.Fax</Fax>
+  <Industry>$0.Industry</Industry>
+  <Name>$0.Name</Name>
+  <NumberOfEmployees>$0.NumberOfEmployees</NumberOfEmployees>
+  <Ownership>$0.Ownership</Ownership>
+  <Phone>$0.Phone</Phone>
+  <Rating>$0.Rating</Rating>
+  <ShippingCity>$0.ShippingCity</ShippingCity>
+  <ShippingCountry>$0.ShippingCountry</ShippingCountry>
+  <ShippingPostalCode>$0.ShippingPostalCode</ShippingPostalCode>
+  <ShippingState>$0.ShippingState</ShippingState>
+  <ShippingStreet>$0.ShippingStreet</ShippingStreet>
+  <Sic>$0.Sic</Sic>
+  <TickerSymbol>$0.TickerSymbol</TickerSymbol>
+  <Type>$0.Type</Type>
+  <Website>$0.Website</Website>
+  <LastModifiedDate>$0.LastModifiedDate</LastModifiedDate>
+</clover:element>]]></attr>
+<attr name="_data_format"><![CDATA[MAP]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="BEAN_READER0:0" guiBendpoints="" id="Edge0" inPort="Port 0 (in)" metadata="d98207c4-f0a9-434e-8880-3fa9275156ca" outPort="Port 0 (out)" toNode="FOREACH_SIEBEL_X0020ACCOUNT_SALESFORCE_X0020ACCOUNT:0"/>
+<Edge debugMode="true" fromNode="FOREACH_SIEBEL_X0020ACCOUNT_SALESFORCE_X0020ACCOUNT:0" guiBendpoints="" id="Edge1" inPort="Port 0 (in)" metadata="c7d3d8df-4892-46cb-9e79-50128044845e" outPort="Port 0 (out)" toNode="MAP_WRITER0:0"/>
+</Phase>
+</Graph>
