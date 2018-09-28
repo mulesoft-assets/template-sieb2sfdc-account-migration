@@ -7,30 +7,39 @@
 		<section id="use_case">
 I want to synchronize accounts from Oracle Siebel Business Objects to Salesforce instance.
 
-This Template should serve as a foundation for the process of migrating accounts from Oracle Siebel Business Objects to Salesforce instance, being able to specify filtering criteria and desired behavior when an account already exists in the Salesforce. 
+This template should serve as a foundation for the process of migrating accounts from Oracle 
+Siebel Business Objects to Salesforce instance, being able to specify filtering criteria and 
+desired behavior when an account already exists in the Salesforce. 
 
-As implemented, this Template leverage the [Batch Module](http://www.mulesoft.org/documentation/display/current/Batch+Processing).
+As implemented, this template leverages the Mule batch module.
 
 The batch job is divided into *Process* and *On Complete* stages.
 
 The migration process starts with querying Siebel for all the existing Accounts that match the filter criteria.
-During the *Process* stage, each Account will be filtered depending on existence of matching account in the Salesforce.
-The last step of the *Process* stage will group the accounts and create/update them in Salesforce.
-Finally during the *On Complete* stage the Template will both output statistics data into the console and send a notification email with the results of the batch execution. 
+During the *Process* stage, each Account is filtered depending on existence of matching account in the Salesforce.
+The last step of the *Process* stage groups the accounts and creates or updates them in Salesforce.
+Finally during the *On Complete* stage the Template outputs statistics data into the console and sends 
+a notification email with the results of the batch execution. 
 		</section>
 		<section id="considerations">
 <![CDATA[
-To make this Anypoint Template run, there are certain preconditions that must be considered. All of them deal with the preparations in both, that must be made in order for all to run smoothly. **Failing to do so could lead to unexpected behavior of the template.**
+To make this Anypoint Template run, there are certain preconditions that must be considered. 
+All of them deal with the preparations in both, that must be made in order for all to run smoothly. 
+Failing to do so can lead to unexpected behavior of the template.
 ]]>
 		</section>
 		<section id="sieb_src">
 		<![CDATA[
-In order to make the Siebel connector work smoothly you have to provide the correct version of the Siebel jars that works with your Siebel installation. [See more](https://docs.mulesoft.com/connectors/siebel-connector#prerequisites).
+In order to make the Siebel connector work smoothly you have to provide the correct version of the 
+Siebel JAR files that works with your Siebel installation. 
+[See more](https://docs.mulesoft.com/connectors/siebel-connector#prerequisites).
 ]]>
 		</section>
 		<section id="running_on_cloudhub">
 <![CDATA[
-Once your app is all set and started, supposing you choose as domain name `sieb2sfdcaccountmigration` to trigger the use case you just need to hit `http://sieb2sfdcaccountmigration.cloudhub.io/migrateaccounts` and report will be sent to the e-mails configured.
+Once your app is all set and started, if you choose the `sieb2sfdcaccountmigration` domain name,
+to trigger the use case browse to `http://sieb2sfdcaccountmigration.cloudhub.io/migrateaccounts` 
+and the report ise sent to the emails you configured.
 ]]>
 		</section>
 		<section id="application_configuration">
@@ -38,12 +47,12 @@ Once your app is all set and started, supposing you choose as domain name `sieb2
 + http.port `9090` 
 + page.size `200`
 
-**Salesforce Connector configuration**
+**Salesforce Connector Configuration**
 + sfdc.username `joan.baez@org`
 + sfdc.password `JoanBaez456`
 + sfdc.securityToken `ces56arl7apQs56XTddf34X`
 
-**Oracle Siebel Business Objects Connector configuration**
+**Oracle Siebel Business Objects Connector Configuration**
 + sieb.user `SADMIN`
 + sieb.password `SADMIN`
 + sieb.server `192.168.10.8`
@@ -51,13 +60,13 @@ Once your app is all set and started, supposing you choose as domain name `sieb2
 + sieb.objectManager `EAIObjMgr_enu`
 + sieb.port `2321`
 
-**SMTP Services configuration**
+**SMTP Services Configuration**
 + smtp.host `some.host`
 + smtp.port `587`
 + smtp.user `email%40example.com`
 + smtp.password `password`
 
-**E-Mail Details**
+**EMail Details**
 + mail.from `batch.migrateaccounts.migration%40mulesoft.com`
 + mail.to `test@gmail.com`
 + mail.subject `Batch Job Finished Report`
@@ -65,15 +74,16 @@ Once your app is all set and started, supposing you choose as domain name `sieb2
 		</section>
 		<section id="api_calls">
 		<![CDATA[
-Salesforce imposes limits on the number of API Calls that can be made. Therefore calculating this amount may be an important factor to consider. The Anypoint Template calls to the API can be calculated using the formula:
+Salesforce imposes limits on the number of API calls that can be made. Therefore calculating this amount 
+may be an important factor to consider. The Anypoint Template calls to the API can be calculated using the formula:
 
 ***X + X / ${page.size}***
 
-Being ***X*** the number of Accounts to be synchronized on each run. 
+***X*** is the number of Accounts to be synchronized on each run. 
 
-The division by ***${page.size}*** is because, by default, Accounts are gathered in groups of ${page.size} for each Upsert API Call in the aggregation step. 
+Divide by ***${page.size}*** because by default, accounts are gathered in groups of ${page.size} for each Upsert API Call in the aggregation step. 
 
-For instance if 10 records are fetched from origin instance, then 11 api calls to Salesforce will be made (10 + 1).
+For instance if 10 records are fetched from origin instance, then 11 API calls are made to Salesforce (10 + 1).
 ]]>
 		</section>
 <section id="default_endpoints_xml">
