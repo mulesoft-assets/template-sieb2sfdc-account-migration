@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+    xmlns:siebel="http://www.mulesoft.org/schema/mule/siebel" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+    xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+    xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/siebel/current/mule-siebel.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd 
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
+
+    <salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="ea2f1597-8079-4696-b3ec-062bc7992169">
+        <salesforce:basic-connection username="${sfdc.username}" password="${sfdc.password}"
+            securityToken="${sfdc.securityToken}" />
+    </salesforce:sfdc-config>
+
+    <siebel:siebel-config name="Siebel_JDB_Siebel" doc:name="Siebel JDB Siebel" doc:id="b0b9a3fe-6564-4b6a-b7fb-f555f929a790">
+        <siebel:basic-connection user="${sieb.user}" password="${sieb.password}" server="${sieb.server}"
+            port="${sieb.port}" serverName="${sieb.serverName}" objectManager="${sieb.objectManager}" />
+    </siebel:siebel-config>
+
+    <configuration-properties doc:name="Configuration properties" doc:id="7584fb1d-2fa2-445a-b949-eed01f5785bd"
+        file="common.properties" />
+    <configuration-properties doc:name="Configuration properties" doc:id="86e0eb9d-cf2e-451a-9e09-b4afdf13e0e9"
+        file="mule.${mule.env}.properties" />
+    <configuration-properties doc:name="Configuration properties" doc:id="0abdf143-d5d1-4168-bdbd-7e3722442725"
+        file="mule-artifact.properties" />
+    <global-property doc:name="Global Property" name="mule.env" value="dev" />
+    <http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="f083686a-1719-4db3-80bb-b2b6f9087c7b">
+        <http:listener-connection host="0.0.0.0" port="${http.port}" />
+    </http:listener-config>
+    <tls:context name="TLS_Context" doc:id="90bb9eb2-214a-4b43-9de0-b4dacbabe67b" doc:name="TLS Context">
+        <tls:trust-store insecure="true" />
+    </tls:context>
+    <email:smtp-config name="Gmail_SMTP" doc:id="9d412d13-3d3c-4ad9-9dbd-f927aa9ca0f4" doc:name="Email SMTP">
+        <email:smtps-connection host="${smtp.host}" password="${smtp.password}" port="${smtp.port}"
+            tlsContext="TLS_Context" user="${smtp.user}" />
+    </email:smtp-config>
+
+</mule>
+
+        
