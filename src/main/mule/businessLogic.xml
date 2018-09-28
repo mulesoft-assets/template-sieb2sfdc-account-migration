@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+    xmlns:siebel="http://www.mulesoft.org/schema/mule/siebel" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+    xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/siebel/current/mule-siebel.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+    <flow name="businessLogicFlow" doc:id="2df888d8-96fd-4b28-8d6f-a26512367228">
+        <ee:transform doc:name="Set Query for Siebel" doc:id="727014aa-a3d9-4a94-8f39-fcabc1360282">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+    "fields" : ["Account Number", 
+    "Annual Revenue", "Source", "Bill To City", 
+    "Bill To Country", "Bill To Postal Code", 
+    "Bill To State", "Bill To Street Address", 
+    "Description", "Fax Number", "Industry", 
+    "Last Update - SDQ", "Name", "Employees", 
+    "Ownership Type", "Parent Account Id", 
+    "Main Phone Number", "Rate", "Ship To City", 
+    "Ship To Country", "Ship To Postal Code", 
+    "Ship To State", "Ship To Street Address", 
+    "SIC Code", "Ticker", "Type", "Home Page"],
+    "searchSpec": {
+        "Employees" : "> 70000"
+    }
+} ]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <siebel:query-business-components businessObjectComponentType="Account.Account"
+            doc:name="Query Accounts from Siebel" doc:id="291f860e-e173-4c12-86eb-db6d30a4e66c" config-ref="Siebel_JDB_Siebel" />
+		<batch:job jobName="fromSiebelToSalesforceBatch" doc:id="8f590a10-d516-47d5-b49a-c7a1207e0a73">
+            <batch:process-records>
+                <batch:step name="getAccountFromSalesforceStep" doc:id="ac1a49fd-c084-415f-8e30-284612480480">
+                    <ee:transform doc:name="Set account variable" doc:id="4811f2a6-80b5-4f30-800c-78f50d5a0316">
+                        <ee:message>
+                        </ee:message>
+                        <ee:variables>
+                            <ee:set-variable variableName="account"><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-variable>
+                        </ee:variables>
+                    </ee:transform>
+                    <salesforce:query-single doc:name="Query Account from Salesforce" doc:id="d31356d8-5496-4eff-90c3-6b49dac5c5a8"
+                        config-ref="Salesforce_Config">
+                        <salesforce:salesforce-query>SELECT Id, Name, LastModifiedDate FROM Account WHERE Name = ':name'
+                        </salesforce:salesforce-query>
+                        <salesforce:parameters><![CDATA[#[output application/java
+---
+{
+	"name" : payload.Name
+}]]]></salesforce:parameters>
+                    </salesforce:query-single>
+					<ee:transform doc:name="Set Account ID" doc:id="b1e6a23e-e268-44b9-82b5-664e8af503b2">
+                        <ee:message>
+                            <ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+vars.account ++ {
+	(Id: payload.Id) if(not isEmpty(payload.Id))
+}]]></ee:set-payload>
+                        </ee:message>
+                    </ee:transform>
+                </batch:step>
+                <batch:step name="UpsertInSalesforce" doc:id="bcb50a3c-eb11-4769-bc21-144b7c0c32a1" acceptExpression="(payload != null)">
+                    <ee:transform doc:name="Data upsert fo Salesforce" doc:id="b0a3bff7-e964-4b3d-bf1e-4ffaf4e43fdd">
+                        <ee:message>
+                            <ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{	
+	Id: payload.Id,
+	AnnualRevenue	: payload."Annual Revenue",
+	BillingCity: payload."Bill To City",
+	BillingState: payload."Bill To State",
+	BillingStreet: payload."Bill To Street Address",
+	BillingCountry: payload."Bill To Country",
+	BillingPostalCode: payload."Bill To Postal Code",
+	Description: payload.Description,
+	Fax: payload."Fax Number",
+	Name: payload.Name,
+	NumberOfEmployees: payload.Employees as Number,
+	Phone: payload."Main Phone Number",
+	Rating: payload.Rate,
+	ShippingCity: payload."Ship To City",
+	ShippingCountry: payload."Ship To Country",
+	ShippingPostalCode: payload."Ship To Postal Code",
+	ShippingState: payload."Ship To State",
+	ShippingStreet: payload."Ship To Street Address",
+	Website : payload."Home Page"
+}]]></ee:set-payload>
+                        </ee:message>
+                    </ee:transform>
+					<batch:aggregator doc:name="Batch Aggregator" doc:id="3bf74ac6-db23-493b-9373-5f6a0f483f97" size="${page.size}">
+						<salesforce:upsert type="Account" doc:name="Upsert Accounts to Salesforce" doc:id="0e54211f-e9a1-45a7-bef8-bd634b187b49" config-ref="Salesforce_Config" externalIdFieldName="Id"/>
+						<logger level="INFO" doc:name="Log upsert" doc:id="bb5ca76c-8260-4c48-bf50-32f420250047" message="#[output application/json --- payload]" />
+					</batch:aggregator>
+                </batch:step>
+            </batch:process-records>
+            <batch:on-complete>
+                <scatter-gather doc:name="All" doc:id="061d40cd-d732-4cb7-8cc1-c7b234b18f8a">
+                    <route>
+                        <logger level="INFO" doc:name="Log 'Migration process has finished'" doc:id="4e976159-dcf2-4b2b-ae55-7e17aaff41bc"
+                            message="Migration process has finished" />
+                    </route>
+                    <route>
+                        <ee:transform doc:name="Prepare migration result email" doc:id="a13df665-c422-4464-842b-432020d81612">
+                            <ee:message>
+                                <ee:set-payload><![CDATA[%dw 2.0
+ output text/plain
+ ---
+ "Migration Report: \n"
+  
+ ++ "\n Time [milliseconds]: "         ++ payload.elapsedTimeInMillis!
+ ++ "\n Total Records: "            ++ payload.totalRecords!
+ ++ "\n Successful Records: "        ++ payload.successfulRecords!
+ ++ "\n Failed Records: "            ++ payload.failedRecords!
+ ++ "\n Loaded Records: "            ++ payload.loadedRecords!
+ ++ "\n Processed Records: "         ++ payload.processedRecords!]]></ee:set-payload>
+                            </ee:message>
+                        </ee:transform>
+                        <email:send doc:name="Send migration email" doc:id="c910d41e-8392-4086-b234-c5a96cf34288"
+                            fromAddress="${mail.from}" subject="${mail.subject}" config-ref="Gmail_SMTP">
+                            <email:to-addresses>
+                                <email:to-address value="${mail.to}" />
+                            </email:to-addresses>
+                        </email:send>
+                    </route>
+                </scatter-gather>
+            </batch:on-complete>
+        </batch:job>
+    </flow>
+    <flow name="mainFlow" doc:id="99c66815-2ee9-4348-8cce-6290781578f3">
+        <flow-ref doc:name="businessLogicFlow" doc:id="b4c8dd28-6e33-4962-8372-66a2bf1c7882" name="businessLogicFlow" />
+        <error-handler>
+            <on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate"
+                doc:id="9708f1e7-f09e-4cf7-8dd0-86870a12d45e">
+                <flow-ref doc:name="errorHandlingFlow" doc:id="d7de3529-d037-45c1-8b39-de875330ba9d" name="errorHandlingFlow" />
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+
+</mule>        
