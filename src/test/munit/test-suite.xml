@@ -97,8 +97,8 @@ output application/java
 		</munit:execution>
 		<munit:validation >
 			<munit-tools:assert-that doc:name="Assert that number of SFDC account is 2" doc:id="0c605910-b863-4443-a26e-c34cf7e6c880" expression="#[sizeOf(vars.sfdcMigratedAccounts)]" is="#[MunitTools::equalTo(2)]" message="Number of migrated account should be 2"/>
-			<munit-tools:assert-that doc:name="Assert that number of employees is 80000" doc:id="ab771fb8-5012-4a5e-8d47-7f1a9d332476" expression="#[vars.sfdcMigratedAccounts[0].NumberOfEmployees]" is='#[MunitTools::equalTo("80000")]' message="Number of employeest should be 80000"/>
-			<munit-tools:assert-that doc:name="Assert that number of employees is 80000" doc:id="2745bd21-1d1a-4c84-81b7-3da19fc71998" expression="#[vars.sfdcMigratedAccounts[1].NumberOfEmployees]" is='#[MunitTools::equalTo("80000")]' message="Number of employeest should be 80000" />
+			<munit-tools:assert-that doc:name="Assert that number of employees is 80000" doc:id="ab771fb8-5012-4a5e-8d47-7f1a9d332476" expression="#[vars.sfdcMigratedAccounts[0].NumberOfEmployees]" is='#[MunitTools::equalTo("80000")]' message="Number of employees should be 80000"/>
+			<munit-tools:assert-that doc:name="Assert that number of employees is 80000" doc:id="2745bd21-1d1a-4c84-81b7-3da19fc71998" expression="#[vars.sfdcMigratedAccounts[1].NumberOfEmployees]" is='#[MunitTools::equalTo("80000")]' message="Number of employees should be 80000" />
 		</munit:validation>
 	</munit:test>
 	<munit:after-test name="test-suiteAfter_Test" description="After tests actions" doc:id="864202cf-c847-47a2-a687-fed78de1201d" >
