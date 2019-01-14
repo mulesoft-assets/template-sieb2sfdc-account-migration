@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:siebel="http://www.mulesoft.org/schema/mule/siebel"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/siebel http://www.mulesoft.org/schema/mule/siebel/current/mule-siebel.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+	<munit:config name="test-suite.xml" />
+    <configuration-properties doc:name="Configuration properties" file="mule.test.properties" />
+    	
+	<munit:before-test name="test-suiteBefore_Test" description="Before tests actions" doc:id="4115f673-434e-4700-b757-18891103febf" >
+		<set-variable value='#["XXX-" ++ uuid()[0 to 7]]' doc:name="prefix" doc:id="f9aee14b-7023-4bd6-850b-d902c163fda2" variableName="prefix"/>
+		<ee:transform doc:name="Prepare test data" doc:id="c3df5fea-8540-4ee9-84f8-b72bc2c38adf">
+				<ee:message />
+				<ee:variables>
+					<ee:set-variable variableName="testDataSieb"><![CDATA[%dw 2.0
+output application/java
+---
+[
+	{	
+		Name: vars.prefix++ "-Test account Siebel 1000",
+		Employees: "1000"
+	},
+	{	
+		Name: vars.prefix++ "-Test account Siebel 80000",
+		Employees: "80000"
+	}
+]
+]]></ee:set-variable>
+					<ee:set-variable variableName="testDataSiebSfdc"><![CDATA[%dw 2.0
+output application/java
+---
+{		
+	Name: vars.prefix++ "-Test account Siebel-Salesforce 80000",
+	Employees: "80000"
+}
+]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		<set-variable value="#[[]]" doc:name="Create variable siebIds" doc:id="221195f4-07ad-4b2a-bd50-4bb85c04501f" variableName="siebIds" />
+		<ee:transform doc:name="Prepare test data for Siebel" doc:id="212dfaa6-c2bb-497f-9877-89127ec9a55a">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+[vars.testDataSieb[0], vars.testDataSieb[1], vars.testDataSiebSfdc]
+]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		<foreach doc:name="For Each" doc:id="66ca5762-cda8-4c39-8c0d-b344a26de762" collection="payload">
+				<siebel:upsert-business-component businessObjectComponentType="Account.Account" doc:name="Create Account in Siebel" doc:id="687ae68c-7ef1-484d-bc9e-2a3dfa3bf4e0" config-ref="Siebel_JDB_Siebel" />
+			<ee:transform doc:name="Store IDs to variable siebIds" doc:id="c673b9b5-e003-4e3f-8a18-89558704f815">
+					<ee:message />
+					<ee:variables>
+						<ee:set-variable variableName="siebIds"><![CDATA[%dw 2.0
+output application/java
+---
+vars.siebIds + payload.createdObjectId]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</foreach>
+		<ee:transform doc:name="Prepare test data for Salesforce" doc:id="b61162e8-04a6-444f-93c6-d728e23fa279">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+[{
+	Name: vars.testDataSiebSfdc.Name,
+	NumberOfEmployees: 3000
+}]]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		<salesforce:create type="Account" doc:name="Create Account in instance Salesforce" doc:id="223a018f-d7e0-46a8-9f67-26988e1abb9d" config-ref="Salesforce_Config" />
+		<set-variable value="#[payload map ($.id)]" doc:name="Store IDs to variable sfdcIds" doc:id="e55d3e61-b919-41e3-85ae-b63ebaa61e08" variableName="sfdcIds" />
+		<munit-tools:mock-when doc:name="Mock email sending" doc:id="22851ce7-4e33-4076-a18f-a3a6dcfb82e7" processor="email:send"/>
+	</munit:before-test>
+	<munit:test name="test-suiteTest" description="MUnit Test" doc:id="b6cfd641-6aff-4c73-9706-84bb3805ecb7" >
+		<munit:execution >
+			<flow-ref doc:name="Call businessLogicFlow" doc:id="87536cda-f9c9-4cd3-b30a-1dda9e4d5104" name="businessLogicFlow"/>
+			<scripting:execute doc:name="Sleep 20 seconds" doc:id="3ae34999-e548-4ecb-b184-83477102a0ab" engine="groovy">
+				<scripting:code >sleep(20000)</scripting:code>
+			</scripting:execute>
+			<salesforce:query doc:name="Query SFDC Test Accounts" doc:id="0d1c28fb-7d75-47aa-952c-0f75dc86ca81" config-ref="Salesforce_Config" target="sfdcMigratedAccounts">
+				<salesforce:salesforce-query >Select Id, Name, NumberOfEmployees FROM Account WHERE Name LIKE ':name'</salesforce:salesforce-query>
+				<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	"name" : vars.prefix ++ "%"
+}]]]></salesforce:parameters>
+			</salesforce:query>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that number of SFDC account is 2" doc:id="0c605910-b863-4443-a26e-c34cf7e6c880" expression="#[sizeOf(vars.sfdcMigratedAccounts)]" is="#[MunitTools::equalTo(2)]" message="Number of migrated account should be 2"/>
+			<munit-tools:assert-that doc:name="Assert that number of employees is 80000" doc:id="ab771fb8-5012-4a5e-8d47-7f1a9d332476" expression="#[vars.sfdcMigratedAccounts[0].NumberOfEmployees]" is='#[MunitTools::equalTo("80000")]' message="Number of employees should be 80000"/>
+			<munit-tools:assert-that doc:name="Assert that number of employees is 80000" doc:id="2745bd21-1d1a-4c84-81b7-3da19fc71998" expression="#[vars.sfdcMigratedAccounts[1].NumberOfEmployees]" is='#[MunitTools::equalTo("80000")]' message="Number of employees should be 80000" />
+		</munit:validation>
+	</munit:test>
+	<munit:after-test name="test-suiteAfter_Test" description="After tests actions" doc:id="864202cf-c847-47a2-a687-fed78de1201d" >
+		<salesforce:query doc:name="Query accounts to delete" doc:id="ad7c2d0f-3f9f-4791-9910-dbc60d6bee2a" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query>Select Id FROM Account WHERE Name LIKE ':name'</salesforce:salesforce-query>
+			<salesforce:parameters><![CDATA[#[output application/java
+---
+{
+	"name" : vars.prefix ++ "%"
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<salesforce:delete doc:name="Delete test data from Salesforce" doc:id="566eda07-d966-420c-8a8b-b458c22910bb" config-ref="Salesforce_Config" >
+			<salesforce:delete-ids ><![CDATA[#[payload map ($.Id)]]]></salesforce:delete-ids>
+		</salesforce:delete>
+		<foreach doc:name="For Each" doc:id="728487db-c4c2-4d6f-9e55-2340eb752abd" collection="vars.siebIds" >
+			<siebel:delete-business-component doc:name="Delete test data from Siebel" doc:id="ed077726-170b-40ec-89ed-b0c19b0ffa21" config-ref="Siebel_JDB_Siebel" businessObjectComponentType="Account.Account" businessComponentId="#[payload]" />
+		</foreach>
+	</munit:after-test>
+
+
+</mule>
