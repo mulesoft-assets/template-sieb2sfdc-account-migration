@@ -83,8 +83,8 @@ output application/java
 	<munit:test name="test-suiteTest" description="MUnit Test" doc:id="b6cfd641-6aff-4c73-9706-84bb3805ecb7" >
 		<munit:execution >
 			<flow-ref doc:name="Call businessLogicFlow" doc:id="87536cda-f9c9-4cd3-b30a-1dda9e4d5104" name="businessLogicFlow"/>
-			<scripting:execute doc:name="Sleep 20 seconds" doc:id="3ae34999-e548-4ecb-b184-83477102a0ab" engine="groovy">
-				<scripting:code >sleep(20000)</scripting:code>
+			<scripting:execute doc:name="Sleep 60 seconds" doc:id="3ae34999-e548-4ecb-b184-83477102a0ab" engine="groovy">
+				<scripting:code >sleep(60000)</scripting:code>
 			</scripting:execute>
 			<salesforce:query doc:name="Query SFDC Test Accounts" doc:id="0d1c28fb-7d75-47aa-952c-0f75dc86ca81" config-ref="Salesforce_Config" target="sfdcMigratedAccounts">
 				<salesforce:salesforce-query >Select Id, Name, NumberOfEmployees FROM Account WHERE Name LIKE ':name'</salesforce:salesforce-query>
